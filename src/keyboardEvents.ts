@@ -15,18 +15,21 @@ class KeyboardEvents {
   private ID = 0;
   // fuck these
   private ignoredKeys = ["Insert", "PageUp", "PageDown", "CapsLock"];
+  // not these tho 💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅
+  private controlKeys = ["Shift", "Control", "Meta", "Alt"];
 
   constructor() {
     this.listenerIds = new Map();
     this.listeners = new Map();
+    this.onKeyDown = this.onKeyDown.bind(this);
     document.addEventListener("keydown", this.onKeyDown);
   }
 
   private onKeyDown(e: KeyboardEvent) {
     let c: EventCategory = EventCategory.Nothing;
-    if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey) {
+    if (this.controlKeys.includes(e.key)) {
       c = EventCategory.Control;
-    } else if (this.ignoredKeys.indexOf(e.key) === -1) {
+    } else if (!this.ignoredKeys.includes(e.key)) {
       c = EventCategory.Buffer;
     }
 
@@ -57,9 +60,14 @@ class KeyboardEvents {
 
   removeListener(id: number) {
     this.listeners.delete(id);
+    // shut up
+    this.listenerIds.forEach((ids) => {
+      if (ids.includes(id)) ids.splice(ids.indexOf(id));
+    });
   }
 }
 
 type handler = (e: KeyboardEvent) => void;
 
-export default KeyboardEvents;
+const deezNuts = new KeyboardEvents();
+export { deezNuts as KeyboardEvents, EventCategory };
