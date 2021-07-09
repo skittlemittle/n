@@ -23,7 +23,52 @@ class BufferContainer extends React.Component<{}, BufferState> {
   }
 
   private decrementPoint(i: number) {
-    return this.state.point === 0 ? 0 : this.state.point - 1;
+    return this.state.point === 0 ? 0 : this.state.point - i;
+  }
+
+  private incrementPoint(i: number) {
+    //prettier-ignore
+    return this.state.point === this.state.text.length ? this.state.point : this.state.point + i;
+  }
+
+  /** returns the distance to the next \n
+   * @param p the point to start the measurement from
+   * @param direction which direction to look in. true = right, false = left
+   */
+  private distanceToNewLine(p: number, direction: boolean): number {
+    const step = direction ? 1 : -1;
+    let seek = p;
+    let distance = 0;
+    while (true) {
+      if (this.state.text[seek + step] === "\n") break;
+      if (seek + step === 0 || seek + step >= this.state.text.length) break;
+      distance++;
+      seek += step;
+    }
+    return distance;
+  }
+
+  /** arrowup */
+  private movePointUp() {
+    // go two newlines up then add till at target col or at line end.
+    let p = this.state.point;
+    const d1 = this.distanceToNewLine(p, false);
+    p -= d1 + 1;
+    if (p > 0) {
+      const d2 = this.distanceToNewLine(p, false);
+      p -= d2;
+      p += Math.min(d2, d1);
+      this.setState({ point: p });
+    }
+  }
+
+  /** arrowdown */
+  private movePointDown() {
+    let p = this.state.point;
+    const d1 = this.distanceToNewLine(p, false);
+    const d2 = this.distanceToNewLine(p, true);
+    p += d2 + 2 + d1;
+    if (p < this.state.text.length) this.setState({ point: p });
   }
 
   private handleKeyPress = (key: KeyboardEvent) => {
@@ -43,7 +88,13 @@ class BufferContainer extends React.Component<{}, BufferState> {
         this.setState({ point: this.decrementPoint(1) });
         break;
       case "ArrowRight":
-        this.setState({ point: this.state.point + 1 });
+        this.setState({ point: this.incrementPoint(1) });
+        break;
+      case "ArrowUp":
+        this.movePointUp();
+        break;
+      case "ArrowDown":
+        this.movePointDown();
         break;
       default:
         this.bufferGap.insert(key.key, this.state.point);
