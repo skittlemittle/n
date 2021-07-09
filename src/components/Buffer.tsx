@@ -1,17 +1,27 @@
 import React from "react";
 import styled from "styled-components";
 
+/** Cope */
+const editorSettings = {
+  fontSize: 16,
+  fontWidth: 9.62,
+  lineHeight: 19,
+};
+
 const BufferLine = styled.div`
   white-space: pre;
-  height: 19px;
+  height: ${editorSettings.lineHeight}px;
+  font-family: monospace, monospace;
+  font-style: normal;
+  font-size: ${editorSettings.fontSize}px;
 `;
 
-const Bar = styled.div`
-  height: 19px;
+const Cursor = styled.div`
+  height: ${editorSettings.lineHeight}px;
   width: 2px;
   position: absolute;
   visibility: ${(props) => (props.hidden ? "hiddin" : "visible")};
-  background: red;
+  background: #3e3e3e;
   top: 0px;
   left: 0px;
 `;
@@ -24,7 +34,7 @@ interface CursorProps {
   position: { row: number; column: number };
 }
 
-/** Draws and positions the cursor */
+/** Renders a text cursor */
 class CursorLayer extends React.Component<CursorProps, CursorState> {
   constructor(props: CursorProps) {
     super(props);
@@ -40,13 +50,13 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
 
   render() {
     return (
-      <Bar
+      <Cursor
         hidden={this.state.shown}
         style={{
-          top: this.props.position.row * 19, //TODO: MAGIC NUMBERS REEEEEEEEEEEEEEEEE
-          left: 10 + this.props.position.column * 8,
+          top: this.props.position.row * editorSettings.lineHeight,
+          left: 10 + this.props.position.column * editorSettings.fontWidth,
         }}
-      ></Bar>
+      ></Cursor>
     );
   }
 }
