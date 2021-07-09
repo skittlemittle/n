@@ -1,8 +1,8 @@
 import React from "react";
 
 import Buffer from "./Buffer";
-import BufferGap from "../bufferGap";
-import { KeyboardEvents, EventCategory } from "../keyboardEvents";
+import BufferGap from "../lib/bufferGap";
+import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
 
 interface BufferState {
   text: string;
