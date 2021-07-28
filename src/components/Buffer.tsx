@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-/** Cope */
+/** Cope💅 */
 const editorSettings = {
   fontSize: 16,
   fontWidth: 9.62,

@@ -41,7 +41,7 @@ class BufferContainer extends React.Component<{}, BufferState> {
     let seek = p;
     let distance = 0;
     while (true) {
-      if (seek + step === 0) break;
+      if (seek + step <= 0 || seek + step > this.state.text.length) break;
       if (seek + step === this.state.text.length) {
         distance++;
         break;
@@ -90,6 +90,8 @@ class BufferContainer extends React.Component<{}, BufferState> {
         this.setState({ point: this.decrementPoint(1) });
         break;
       case "Tab":
+        key.preventDefault();
+        key.stopPropagation();
         this.bufferGap.insert("    ", this.state.point);
         this.setState({ point: this.state.point + 4 });
         break;
