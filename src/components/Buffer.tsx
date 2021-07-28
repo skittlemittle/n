@@ -70,13 +70,16 @@ class Buffer extends React.Component<BufferProps, {}> {
   render() {
     let column = this.props.point;
     let row = 0;
+    let shoveCursor = true;
 
     return (
       <div style={{ marginLeft: 10 }}>
         {this.props.text.split("\n").map((line, i) => {
-          if (column - line.length > 0) {
+          if (shoveCursor && column - line.length > 0) {
             column -= line.length + 1;
             row++;
+          } else {
+            shoveCursor = false;
           }
           return <BufferLine key={i}>{line}</BufferLine>;
         })}
