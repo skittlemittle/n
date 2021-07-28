@@ -31,17 +31,22 @@ class BufferContainer extends React.Component<{}, BufferState> {
     return this.state.point === this.state.text.length ? this.state.point : this.state.point + i;
   }
 
-  /** returns the distance to the next \n
+  /** distance to the next "\n"
    * @param p the point to start the measurement from
    * @param direction which direction to look in. true = right, false = left
+   * @returns the distance to the next newline or the borders of the text.
    */
   private distanceToNewLine(p: number, direction: boolean): number {
     const step = direction ? 1 : -1;
     let seek = p;
     let distance = 0;
     while (true) {
+      if (seek + step === 0) break;
+      if (seek + step === this.state.text.length) {
+        distance++;
+        break;
+      }
       if (this.state.text[seek + step] === "\n") break;
-      if (seek + step === 0 || seek + step >= this.state.text.length) break;
       distance++;
       seek += step;
     }
@@ -83,6 +88,16 @@ class BufferContainer extends React.Component<{}, BufferState> {
       case "Backspace":
         this.bufferGap.delete(false, 1, this.state.point);
         this.setState({ point: this.decrementPoint(1) });
+        break;
+      case "Tab":
+        this.bufferGap.insert("    ", this.state.point);
+        this.setState({ point: this.state.point + 4 });
+        break;
+      case "End":
+        this.setState({
+          point:
+            this.state.point + this.distanceToNewLine(this.state.point, true),
+        });
         break;
       case "ArrowLeft":
         this.setState({ point: this.decrementPoint(1) });
