@@ -4,22 +4,41 @@ import Buffer from "./Buffer";
 import BufferGap from "../lib/bufferGap";
 import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
 
-interface BufferState {
+interface State {
   text: string;
   point: number;
 }
 
-class BufferContainer extends React.Component<{}, BufferState> {
-  private bufferGap: BufferGap;
+interface Props {
+  bufferGap: BufferGap;
+  point: number;
+  save: (point: number) => void;
+}
 
-  constructor(props: {}) {
+class BufferContainer extends React.Component<Props, State> {
+  private bufferGap: BufferGap;
+  private KeventID: number;
+
+  constructor(props: Props) {
     super(props);
-    this.bufferGap = new BufferGap();
-    this.state = { text: "", point: 0 };
+    this.KeventID = -1;
+    this.bufferGap = this.props.bufferGap;
+    this.state = {
+      text: this.bufferGap.getContents(),
+      point: this.props.point,
+    };
   }
 
   componentDidMount() {
-    KeyboardEvents.addListener(EventCategory.Buffer, this.handleKeyPress);
+    this.KeventID = KeyboardEvents.addListener(
+      EventCategory.Buffer,
+      this.handleKeyPress
+    );
+  }
+
+  componentWillUnmount() {
+    this.props.save(this.state.point);
+    KeyboardEvents.removeListener(this.KeventID);
   }
 
   private decrementPoint(i: number) {

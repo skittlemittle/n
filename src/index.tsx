@@ -3,11 +3,11 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
-import BufferContainer from "./components/BufferContainer";
+import App from "./components/App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BufferContainer />
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -36,16 +36,21 @@ interface CursorProps {
 
 /** Renders a text cursor */
 class CursorLayer extends React.Component<CursorProps, CursorState> {
+  private blinky: any; // not a word about this
   constructor(props: CursorProps) {
     super(props);
     this.state = { shown: true };
   }
 
   componentDidMount() {
-    setInterval(() => {
+    this.blinky = setInterval(() => {
       const s = this.state.shown;
       this.setState({ shown: !s });
     }, 300);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.blinky);
   }
 
   render() {

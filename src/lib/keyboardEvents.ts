@@ -14,9 +14,15 @@ class KeyboardEvents {
   private listeners: Map<number, handler>;
   private ID = 0;
   // fuck these
-  private ignoredKeys = ["Insert", "PageUp", "PageDown", "CapsLock"];
+  private bufferIgnored = [
+    "Insert",
+    "PageUp",
+    "PageDown",
+    "CapsLock",
+    "Escape",
+  ];
   // not these tho 💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅💅
-  private controlKeys = ["Shift", "Control", "Meta", "Alt"];
+  private controlKeys = ["Shift", "Control", "Meta", "Alt", "Escape"];
 
   constructor() {
     this.listenerIds = new Map();
@@ -29,7 +35,7 @@ class KeyboardEvents {
     let c: EventCategory = EventCategory.Nothing;
     if (this.controlKeys.includes(e.key)) {
       c = EventCategory.Control;
-    } else if (!this.ignoredKeys.includes(e.key)) {
+    } else if (!this.bufferIgnored.includes(e.key)) {
       c = EventCategory.Buffer;
     }
 
