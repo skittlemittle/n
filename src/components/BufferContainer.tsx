@@ -15,6 +15,7 @@ interface Props {
   save: (point: number) => void;
 }
 
+/** handles editing interactions with a buffer */
 class BufferContainer extends React.Component<Props, State> {
   private bufferGap: BufferGap;
   private KeventID: number;
@@ -72,7 +73,6 @@ class BufferContainer extends React.Component<Props, State> {
     return distance;
   }
 
-  /** arrowup */
   private movePointUp() {
     // go two newlines up then add till at target col or at line end.
     let p = this.state.point;
@@ -86,7 +86,6 @@ class BufferContainer extends React.Component<Props, State> {
     }
   }
 
-  /** arrowdown */
   private movePointDown() {
     let p = this.state.point;
     const d1 = this.distanceToNewLine(p, false);
@@ -95,8 +94,8 @@ class BufferContainer extends React.Component<Props, State> {
     if (p < this.state.text.length) this.setState({ point: p });
   }
 
-  private handleKeyPress = (key: KeyboardEvent) => {
-    switch (key.key) {
+  private handleKeyPress = (e: KeyboardEvent, keys: string) => {
+    switch (e.key) {
       case "Enter":
         this.bufferGap.insert("\n", this.state.point);
         this.setState({ point: this.state.point + 1 });
@@ -109,8 +108,8 @@ class BufferContainer extends React.Component<Props, State> {
         this.setState({ point: this.decrementPoint(1) });
         break;
       case "Tab":
-        key.preventDefault();
-        key.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
         this.bufferGap.insert("    ", this.state.point);
         this.setState({ point: this.state.point + 4 });
         break;
@@ -133,7 +132,7 @@ class BufferContainer extends React.Component<Props, State> {
         this.movePointDown();
         break;
       default:
-        this.bufferGap.insert(key.key, this.state.point);
+        this.bufferGap.insert(e.key, this.state.point);
         this.setState({ point: this.state.point + 1 });
         break;
     }
@@ -145,4 +144,10 @@ class BufferContainer extends React.Component<Props, State> {
   }
 }
 
-export default BufferContainer;
+enum Mode {
+  Normal,
+  Insert,
+  Visual,
+}
+
+export { BufferContainer, Mode };
