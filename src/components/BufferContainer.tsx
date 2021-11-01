@@ -4,6 +4,12 @@ import Buffer from "./Buffer";
 import BufferGap from "../lib/bufferGap";
 import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
 
+enum Mode {
+  Normal,
+  Insert,
+  Visual,
+}
+
 interface State {
   text: string;
   point: number;
@@ -13,6 +19,7 @@ interface Props {
   bufferGap: BufferGap;
   point: number;
   save: (point: number) => void;
+  mode: Mode;
 }
 
 /** handles editing interactions with a buffer */
@@ -41,6 +48,68 @@ class BufferContainer extends React.Component<Props, State> {
     this.props.save(this.state.point);
     KeyboardEvents.removeListener(this.KeventID);
   }
+
+  private handleKeyPress = (e: KeyboardEvent, keys: string) => {
+    if (this.props.mode === Mode.Insert) this.insert(e);
+    else if (this.props.mode === Mode.Normal) this.normal(e);
+    this.setState({ text: this.bufferGap.getContents() });
+  };
+
+  private insert(e: KeyboardEvent, keys?: string) {
+    switch (e.key) {
+      case "Enter":
+        this.bufferGap.insert("\n", this.state.point);
+        this.setState({ point: this.state.point + 1 });
+        break;
+      case "Delete":
+        this.bufferGap.delete(true, 1, this.state.point);
+        break;
+      case "Backspace":
+        this.bufferGap.delete(false, 1, this.state.point);
+        this.setState({ point: this.decrementPoint(1) });
+        break;
+      case "Tab":
+        e.preventDefault();
+        e.stopPropagation();
+        this.bufferGap.insert("    ", this.state.point);
+        this.setState({ point: this.state.point + 4 });
+        break;
+      case "End":
+        this.setState({
+          point:
+            this.state.point + this.distanceToNewLine(this.state.point, true),
+        });
+        break;
+      case "ArrowLeft":
+        this.setState({ point: this.decrementPoint(1) });
+        break;
+      case "ArrowRight":
+        this.setState({ point: this.incrementPoint(1) });
+        break;
+      case "ArrowUp":
+        this.movePointUp();
+        break;
+      case "ArrowDown":
+        this.movePointDown();
+        break;
+      default:
+        this.bufferGap.insert(e.key, this.state.point);
+        this.setState({ point: this.state.point + 1 });
+        break;
+    }
+  }
+
+  private normal(e: KeyboardEvent, keys?: string) {
+    console.log("owo");
+  }
+
+  private visual(e: KeyboardEvent, keys?: string) {}
+
+  render() {
+    return <Buffer text={this.state.text} point={this.state.point} />;
+  }
+
+  //============ helpers====================================================
 
   private decrementPoint(i: number) {
     return this.state.point === 0 ? 0 : this.state.point - i;
@@ -93,61 +162,6 @@ class BufferContainer extends React.Component<Props, State> {
     p += d2 + 2 + d1;
     if (p < this.state.text.length) this.setState({ point: p });
   }
-
-  private handleKeyPress = (e: KeyboardEvent, keys: string) => {
-    switch (e.key) {
-      case "Enter":
-        this.bufferGap.insert("\n", this.state.point);
-        this.setState({ point: this.state.point + 1 });
-        break;
-      case "Delete":
-        this.bufferGap.delete(true, 1, this.state.point);
-        break;
-      case "Backspace":
-        this.bufferGap.delete(false, 1, this.state.point);
-        this.setState({ point: this.decrementPoint(1) });
-        break;
-      case "Tab":
-        e.preventDefault();
-        e.stopPropagation();
-        this.bufferGap.insert("    ", this.state.point);
-        this.setState({ point: this.state.point + 4 });
-        break;
-      case "End":
-        this.setState({
-          point:
-            this.state.point + this.distanceToNewLine(this.state.point, true),
-        });
-        break;
-      case "ArrowLeft":
-        this.setState({ point: this.decrementPoint(1) });
-        break;
-      case "ArrowRight":
-        this.setState({ point: this.incrementPoint(1) });
-        break;
-      case "ArrowUp":
-        this.movePointUp();
-        break;
-      case "ArrowDown":
-        this.movePointDown();
-        break;
-      default:
-        this.bufferGap.insert(e.key, this.state.point);
-        this.setState({ point: this.state.point + 1 });
-        break;
-    }
-    this.setState({ text: this.bufferGap.getContents() });
-  };
-
-  render() {
-    return <Buffer text={this.state.text} point={this.state.point} />;
-  }
-}
-
-enum Mode {
-  Normal,
-  Insert,
-  Visual,
 }
 
 export { BufferContainer, Mode };
