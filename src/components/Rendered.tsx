@@ -1,10 +1,10 @@
 /*
- * gaming
- *
- * epic rendered view
+ * Rendered buffer view
  */
 
 import React from "react";
+import marked from "marked";
+import DOMPurify from "dompurify";
 
 interface Props {
   text: string;
@@ -13,7 +13,14 @@ interface Props {
 
 class Rendered extends React.Component<Props, {}> {
   render() {
-    return <h1>{this.props.text}</h1>;
+    // 💅💅💅💅💅💅💅💅💅💅
+    return (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(marked(this.props.text)),
+        }}
+      ></div>
+    );
   }
 }
 

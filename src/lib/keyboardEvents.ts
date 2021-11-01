@@ -48,13 +48,13 @@ class KeyboardEvents {
   private onKeyDown(e: KeyboardEvent) {
     this.pressed.push(e.key);
 
+    if (this.modeKeys.includes(this.pressed.toString())) {
+      this.call(EventCategory.Mode, e);
+    }
+
     // tell the buffer right away about single keypresses
     if (!this.bufferIgnored.includes(e.key)) {
       this.call(EventCategory.Buffer, e);
-    }
-
-    if (this.modeKeys.includes(this.pressed.toString())) {
-      this.call(EventCategory.Mode, e);
     }
   }
 
@@ -65,6 +65,9 @@ class KeyboardEvents {
   /**
    * subscribe to keyboard events
    * @param category the type of keys you want to listen for
+   * @param callback the callback function to pass the event to,
+   * this function takes two args: the event, and a comma separated
+   * string containing the current keycombo
    * @returns the id of your listener, used to remove the listener
    */
   addListener(category: EventCategory, callback: handler): number {

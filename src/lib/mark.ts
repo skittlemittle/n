@@ -1,4 +1,4 @@
-/**
+/*
  * Marker management system for text buffer
  * spec stolen clean off: https://www.finseth.com/craft/#c6.3
  *
