@@ -10,7 +10,7 @@ interface Mark {
   fixed: boolean;
 }
 
-const makeMarksList = () => {
+const makeMarkList = (): MarkList => {
   const markTable: Map<string, Mark> = new Map();
 
   /** make a new unfixed mark at location
@@ -25,6 +25,15 @@ const makeMarksList = () => {
     const name = (Math.random() + 1).toString(36).substring(2);
     markTable.set(name, m);
     return name;
+  };
+
+  /** remove a mark
+   * @param name: the marks name
+   * @return true on success or if the mark doesnt exist, false if the mark couldnt be removed
+   */
+  const removeMark = (name: string): boolean => {
+    if (markTable.get(name)) return markTable.delete(name);
+    return true;
   };
 
   /** get a mark by its name
@@ -91,6 +100,7 @@ const makeMarksList = () => {
 
   return {
     createMark,
+    removeMark,
     getMark,
     whereIs,
     moveMark,
@@ -100,4 +110,16 @@ const makeMarksList = () => {
   };
 };
 
-export default makeMarksList;
+interface MarkList {
+  createMark: (location?: number) => string;
+  removeMark: (name: string) => boolean;
+  getMark: (name: string) => Mark | undefined;
+  whereIs: (name: string) => number | undefined;
+  moveMark: (location: number, name: string) => void;
+  swapPointAndMark: (point: number, name: string) => number | false;
+  pointAtMark: (point: number, name: string) => boolean;
+  pointBeforeMark: (point: number, name: string) => boolean;
+}
+
+export default makeMarkList;
+export type { MarkList };

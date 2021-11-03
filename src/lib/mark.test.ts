@@ -1,7 +1,7 @@
 import makeMarksList from "./mark";
 
 const Marks = makeMarksList();
-test("make mark", () => {
+test("make mark, kill mark", () => {
   let m = Marks.getMark(Marks.createMark());
   expect(m?.location).toEqual(-1);
   expect(m?.fixed).toEqual(false);
@@ -10,6 +10,9 @@ test("make mark", () => {
   m = Marks.getMark(Marks.createMark(l));
   expect(m?.location).toEqual(l);
   expect(m?.fixed).toEqual(false);
+
+  expect(Marks.removeMark(Marks.createMark())).toEqual(true);
+  expect(Marks.removeMark("owo")).toEqual(true);
 });
 
 test("move mark and point around", () => {
