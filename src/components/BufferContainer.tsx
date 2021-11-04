@@ -3,6 +3,8 @@ import React from "react";
 import Buffer from "./Buffer";
 import BufferGap from "../lib/bufferGap";
 import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
+import { MarkList } from "../lib/mark";
+import ClipBoard from "../lib/clipBoard";
 
 enum Mode {
   Normal,
@@ -17,24 +19,31 @@ interface State {
 
 interface Props {
   bufferGap: BufferGap;
-  point: number;
+  clipBoard: ClipBoard;
+  initPoint: number;
   save: (point: number) => void;
   mode: Mode;
+  visualMarks: MarkList;
 }
 
 /** handles editing interactions with a buffer */
 class BufferContainer extends React.Component<Props, State> {
   private bufferGap: BufferGap;
+  private visMarks: MarkList;
   private KeventID: number;
+  private selectStart: string; // visual mode select marker
 
   constructor(props: Props) {
     super(props);
     this.KeventID = -1;
+    // save me from long ass names
     this.bufferGap = this.props.bufferGap;
+    this.visMarks = this.props.visualMarks;
     this.state = {
       text: this.bufferGap.getContents(),
-      point: this.props.point,
+      point: this.props.initPoint,
     };
+    this.selectStart = "";
   }
 
   componentDidMount() {
@@ -44,14 +53,60 @@ class BufferContainer extends React.Component<Props, State> {
     );
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.mode !== prevProps.mode) this.initMode(this.props.mode);
+  }
+
   componentWillUnmount() {
     this.props.save(this.state.point);
     KeyboardEvents.removeListener(this.KeventID);
   }
 
+  /** initialise stuff on mode changes */
+  private initMode(mode: Mode) {
+    if (mode === Mode.Visual) {
+      this.selectStart = this.visMarks.createMark(this.state.point);
+    }
+  }
+
+  /** deal with ctrl+v in insert mode */
+  private handlePaste(e: React.ClipboardEvent<HTMLDivElement>) {
+    if (this.props.mode === Mode.Insert) {
+      const paste = e.clipboardData?.getData("text");
+      this.bufferGap.insert(paste, this.state.point);
+      this.setState({
+        text: this.bufferGap.getContents(),
+        point: this.state.point + paste.length,
+      });
+    }
+  }
+
   private handleKeyPress = (e: KeyboardEvent, keys: string) => {
-    if (this.props.mode === Mode.Insert) this.insert(e);
-    else if (this.props.mode === Mode.Normal) this.normal(e);
+    switch (e.key) {
+      case "End":
+        this.setState({
+          point:
+            this.state.point + this.distanceToNewLine(this.state.point, true),
+        });
+        break;
+      case "ArrowLeft":
+        this.setState({ point: this.decrementPoint(1) });
+        break;
+      case "ArrowRight":
+        this.setState({ point: this.incrementPoint(1) });
+        break;
+      case "ArrowUp":
+        this.movePointUp();
+        break;
+      case "ArrowDown":
+        this.movePointDown();
+        break;
+      default:
+        if (this.props.mode === Mode.Insert) this.insert(e);
+        else if (this.props.mode === Mode.Normal) this.normal(e);
+        else if (this.props.mode === Mode.Visual) this.visual(e);
+        break;
+    }
     this.setState({ text: this.bufferGap.getContents() });
   };
 
@@ -74,24 +129,6 @@ class BufferContainer extends React.Component<Props, State> {
         this.bufferGap.insert("    ", this.state.point);
         this.setState({ point: this.state.point + 4 });
         break;
-      case "End":
-        this.setState({
-          point:
-            this.state.point + this.distanceToNewLine(this.state.point, true),
-        });
-        break;
-      case "ArrowLeft":
-        this.setState({ point: this.decrementPoint(1) });
-        break;
-      case "ArrowRight":
-        this.setState({ point: this.incrementPoint(1) });
-        break;
-      case "ArrowUp":
-        this.movePointUp();
-        break;
-      case "ArrowDown":
-        this.movePointDown();
-        break;
       default:
         this.bufferGap.insert(e.key, this.state.point);
         this.setState({ point: this.state.point + 1 });
@@ -99,14 +136,61 @@ class BufferContainer extends React.Component<Props, State> {
     }
   }
 
-  private normal(e: KeyboardEvent, keys?: string) {
-    console.log("owo");
+  private normal(e: KeyboardEvent, keys?: string) {}
+
+  private visual(e: KeyboardEvent, keys?: string) {
+    let exit = false;
+    switch (e.key) {
+      case "y":
+        this.yank(this.selectStart);
+        exit = true;
+        break;
+      default:
+        break;
+    }
+    if (exit) {
+      // COCK
+    }
   }
 
-  private visual(e: KeyboardEvent, keys?: string) {}
-
   render() {
-    return <Buffer text={this.state.text} point={this.state.point} />;
+    return (
+      <Buffer
+        onPaste={(e) => this.handlePaste(e)}
+        text={this.state.text}
+        point={this.state.point}
+      />
+    );
+  }
+
+  //============ visual ====================================================
+  /** copy the text between a mark and the point to the clipboard
+   * @param name: marks name
+   * @return true on success, false if the mark doesnt exist
+   */
+  private yank(name: string): boolean {
+    let p = this.state.point;
+    const wasBefore = this.visMarks.pointBeforeMark(p, name);
+    // make sure the point is before the mark
+    if (!wasBefore) {
+      const maybeP = this.visMarks.swapPointAndMark(p, name);
+      if (maybeP) p = maybeP;
+      else return false;
+    }
+
+    const l = this.visMarks.whereIs(name);
+    //TODO: put it on the clipboard
+    if (l) {
+      const t = this.bufferGap.getSection(p, l);
+      this.props.clipBoard.paste(t);
+      navigator.clipboard.writeText(t);
+      console.log(this.props.clipBoard.get());
+    } else {
+      return false;
+    }
+    // ok clean up now
+    this.visMarks.removeMark(name);
+    return true;
   }
 
   //============ helpers====================================================

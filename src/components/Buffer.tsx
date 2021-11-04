@@ -46,7 +46,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
     this.blinky = setInterval(() => {
       const s = this.state.shown;
       this.setState({ shown: !s });
-    }, 300);
+    }, 400);
   }
 
   componentWillUnmount() {
@@ -69,6 +69,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
 interface BufferProps {
   text: string;
   point: number;
+  onPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
 }
 
 class Buffer extends React.Component<BufferProps, {}> {
@@ -78,7 +79,7 @@ class Buffer extends React.Component<BufferProps, {}> {
     let shoveCursor = true;
 
     return (
-      <div style={{ marginLeft: 10 }}>
+      <div onPaste={this.props.onPaste} style={{ marginLeft: 10 }}>
         {this.props.text.split("\n").map((line, i) => {
           if (shoveCursor && column - line.length > 0) {
             column -= line.length + 1;

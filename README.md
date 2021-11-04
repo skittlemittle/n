@@ -6,8 +6,10 @@ The most based document editor, write in MD, use latex for maffs, and ummmm draw
 
 **Goals**
 
-- render latex
-
 - ~~render markdown~~
 
-- vim inspired keybinds
+- _everything_ (besides the drawings) is text
+
+- vim inspired keybinds (wip)
+
+- render latex
