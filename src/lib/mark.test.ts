@@ -10,6 +10,8 @@ test("make mark, kill mark", () => {
   m = Marks.getMark(Marks.createMark(l));
   expect(m?.location).toEqual(l);
   expect(m?.fixed).toEqual(false);
+  m = Marks.getMark(Marks.createMark(0));
+  expect(m?.location).toEqual(0);
 
   expect(Marks.removeMark(Marks.createMark())).toEqual(true);
   expect(Marks.removeMark("owo")).toEqual(true);

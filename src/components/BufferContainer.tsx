@@ -19,11 +19,12 @@ interface State {
 
 interface Props {
   bufferGap: BufferGap;
-  clipBoard: ClipBoard;
   initPoint: number;
   save: (point: number) => void;
   mode: Mode;
   visualMarks: MarkList;
+  clipBoard: ClipBoard;
+  returnToNormal: () => void;
 }
 
 /** handles editing interactions with a buffer */
@@ -148,9 +149,7 @@ class BufferContainer extends React.Component<Props, State> {
       default:
         break;
     }
-    if (exit) {
-      // COCK
-    }
+    if (exit) this.props.returnToNormal();
   }
 
   render() {
@@ -174,22 +173,21 @@ class BufferContainer extends React.Component<Props, State> {
     // make sure the point is before the mark
     if (!wasBefore) {
       const maybeP = this.visMarks.swapPointAndMark(p, name);
-      if (maybeP) p = maybeP;
+      if (maybeP !== false) p = maybeP;
       else return false;
     }
 
     const l = this.visMarks.whereIs(name);
-    //TODO: put it on the clipboard
     if (l) {
       const t = this.bufferGap.getSection(p, l);
       this.props.clipBoard.paste(t);
       navigator.clipboard.writeText(t);
-      console.log(this.props.clipBoard.get());
     } else {
       return false;
     }
     // ok clean up now
     this.visMarks.removeMark(name);
+    this.selectStart = "";
     return true;
   }
 

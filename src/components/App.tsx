@@ -69,16 +69,21 @@ class App extends React.Component<{}, State> {
 
   saveRenderedState = (scroll: number) => {};
 
+  returnToNormal = () => {
+    this.setState({ mode: Mode.Normal });
+  };
+
   render() {
     if (this.state.view) {
       return (
         <BufferContainer
           bufferGap={this.bufferGap}
-          clipBoard={this.clipBoard}
           initPoint={this.documentState.point}
           save={this.saveEditorState}
           mode={this.state.mode}
           visualMarks={this.documentState.visualMarkers}
+          clipBoard={this.clipBoard}
+          returnToNormal={this.returnToNormal}
         />
       );
     } else {

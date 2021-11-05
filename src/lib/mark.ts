@@ -19,7 +19,7 @@ const makeMarkList = (): MarkList => {
    */
   const createMark = (location?: number): string => {
     const m = {
-      location: location && location >= 0 ? location : -1,
+      location: location !== undefined && location >= 0 ? location : -1,
       fixed: false,
     };
     const name = (Math.random() + 1).toString(36).substring(2);
@@ -95,7 +95,7 @@ const makeMarkList = (): MarkList => {
    */
   const pointBeforeMark = (point: number, name: string): boolean => {
     const l = markTable.get(name)?.location;
-    return l ? l > point : false;
+    return l !== undefined ? l > point : false;
   };
 
   return {
