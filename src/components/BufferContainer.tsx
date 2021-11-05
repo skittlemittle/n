@@ -146,6 +146,10 @@ class BufferContainer extends React.Component<Props, State> {
         this.yank(this.selectStart);
         exit = true;
         break;
+      case "d":
+        this.delete(this.selectStart);
+        exit = true;
+        break;
       default:
         break;
     }
@@ -165,9 +169,10 @@ class BufferContainer extends React.Component<Props, State> {
   //============ visual ====================================================
   /** copy the text between a mark and the point to the clipboard
    * @param name: marks name
+   * @param del: set to true to delete the text, false to leave it be
    * @return true on success, false if the mark doesnt exist
    */
-  private yank(name: string): boolean {
+  private yank(name: string, del = false): boolean {
     let p = this.state.point;
     const wasBefore = this.visMarks.pointBeforeMark(p, name);
     // make sure the point is before the mark
@@ -178,10 +183,14 @@ class BufferContainer extends React.Component<Props, State> {
     }
 
     const l = this.visMarks.whereIs(name);
-    if (l) {
+    if (l !== undefined) {
       const t = this.bufferGap.getSection(p, l);
       this.props.clipBoard.paste(t);
       navigator.clipboard.writeText(t);
+      if (del) {
+        this.bufferGap.delete(true, l - p, p);
+        this.setState({ point: p });
+      }
     } else {
       return false;
     }
@@ -189,6 +198,13 @@ class BufferContainer extends React.Component<Props, State> {
     this.visMarks.removeMark(name);
     this.selectStart = "";
     return true;
+  }
+
+  /** delete and yank the selected text
+   * @param name: select marks name
+   */
+  private delete(name: string): boolean {
+    return this.yank(name, true);
   }
 
   //============ helpers====================================================
