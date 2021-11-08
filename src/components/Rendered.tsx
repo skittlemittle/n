@@ -3,8 +3,11 @@
  */
 
 import React from "react";
+
 import marked from "marked";
 import DOMPurify from "dompurify";
+import renderLaTeXInElement from "katex/dist/contrib/auto-render";
+import "./stolen/katex.min.css";
 
 interface Props {
   text: string;
@@ -12,6 +15,19 @@ interface Props {
 }
 
 class Rendered extends React.Component<Props, {}> {
+  componentDidMount() {
+    // I am completely sane, trust me
+    renderLaTeXInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true },
+      ],
+      throwOnError: false,
+    });
+  }
+
   render() {
     // 💅💅💅💅💅💅💅💅💅💅
     return (
