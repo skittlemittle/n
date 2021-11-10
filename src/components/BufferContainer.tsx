@@ -90,6 +90,12 @@ class BufferContainer extends React.Component<Props, State> {
             this.state.point + this.distanceToNewLine(this.state.point, true),
         });
         break;
+      case "Home":
+        this.setState({
+          point:
+            this.state.point - this.distanceToNewLine(this.state.point, false),
+        });
+        break;
       case "ArrowLeft":
         this.setState({ point: this.decrementPoint(1) });
         break;
@@ -228,12 +234,15 @@ class BufferContainer extends React.Component<Props, State> {
     let seek = p;
     let distance = 0;
     while (true) {
-      if (seek + step <= 0 || seek + step > this.state.text.length) break;
-      if (seek + step === this.state.text.length) {
+      if (seek + step < 0 || seek + step > this.state.text.length) break;
+      if (seek + step === this.state.text.length || seek + step === 0) {
         distance++;
         break;
       }
-      if (this.state.text[seek + step] === "\n") break;
+      if (this.state.text[seek + step] === "\n") {
+        if (direction) distance++; // stop after the \n if going right
+        break;
+      }
       distance++;
       seek += step;
     }
