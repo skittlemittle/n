@@ -264,10 +264,17 @@ class BufferContainer extends React.Component<Props, State> {
 
   private movePointDown() {
     let p = this.state.point;
-    const d1 = this.distanceToNewLine(p, false);
-    const d2 = this.distanceToNewLine(p, true);
-    p += d2 + 2 + d1;
-    if (p < this.state.text.length) this.setState({ point: p });
+    const column = this.distanceToNewLine(p, false);
+    const nextN = this.distanceToNewLine(p, true);
+    const nextLineLen = this.distanceToNewLine(p + nextN, true);
+
+    if (this.state.text[p] === "\n") {
+      p += nextN;
+    } else {
+      const newColumn = nextLineLen > column ? column : nextLineLen - 1;
+      p += nextN + 1 + newColumn;
+    }
+    if (p <= this.state.text.length) this.setState({ point: p });
   }
 }
 
