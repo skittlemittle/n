@@ -12,4 +12,4 @@ The most based document editor, write in MD, use latex for maffs, and ummmm draw
 
 - vim inspired keybinds (wip)
 
-- render latex
+- ~~render latex~~
