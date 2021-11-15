@@ -4,10 +4,18 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 import App from "./components/App";
+import { COLORS_L } from "./themeConstants";
+import { ThemeProvider } from "styled-components";
+
+const theme = {
+  colors: COLORS_L,
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

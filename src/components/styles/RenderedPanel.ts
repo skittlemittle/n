@@ -1,15 +1,13 @@
 import styled from "styled-components";
 
 const RenderedPanel = styled.div`
-  @import url("https://rsms.me/inter/inter.css");
-
-  background: #fbf1c7;
-  color: #3c3836;
+  background: ${(props) => props.theme.colors.bg0};
+  color: ${(props) => props.theme.colors.fg1};
 
   padding: 3em 2em;
   margin: 0px;
 
-  // font-family: 'Inter'      leave this commented out. css is stupid
+  font-family: "Inter";
   font-style: normal;
   font-size: 18px;
 
@@ -19,7 +17,7 @@ const RenderedPanel = styled.div`
     font-size: 60px;
     /* identical to box height, or 44% */
     letter-spacing: 0.005em;
-    color: #9d001e;
+    color: ${(props) => props.theme.colors.red};
     margin: 0px;
   }
 
@@ -28,7 +26,7 @@ const RenderedPanel = styled.div`
     font-size: 50px;
     /* identical to box height, or 57% */
     letter-spacing: 0.005em;
-    color: #af3a03;
+    color: ${(props) => props.theme.colors.orange};
     margin: 0px;
   }
 
@@ -37,7 +35,7 @@ const RenderedPanel = styled.div`
     font-size: 40px;
     /* identical to box height, or 67% */
     letter-spacing: 0.005em;
-    color: #b57614;
+    color: ${(props) => props.theme.colors.yellow};
     margin: 0px;
   }
 
@@ -46,7 +44,7 @@ const RenderedPanel = styled.div`
     font-size: 35px;
     /* identical to box height, or 80% */
     letter-spacing: 0.005em;
-    color: #79740e;
+    color: ${(props) => props.theme.colors.green};
     margin: 0px;
   }
 
@@ -55,7 +53,7 @@ const RenderedPanel = styled.div`
     font-size: 30px;
     /* identical to box height, or 89% */
     letter-spacing: 0.005em;
-    color: #427b58;
+    color: ${(props) => props.theme.colors.aqua};
     margin: 0px;
   }
 
@@ -68,13 +66,15 @@ const RenderedPanel = styled.div`
 
   code {
     font-family: source-code-pro, Consolas, monospace;
-    background: #ebdbb2;
+    background: ${(props) => props.theme.colors.bg1};
     padding: 0px 0.3em;
+    border-radius: 2px;
   }
 
   .code-block {
-    font-family: source-code-pro, Consolas, monospace;
-    background: #ebdbb2;
+    background: ${(props) => props.theme.colors.bg1};
+    padding: 0px;
+    border-radius: 3px;
   }
 
   hr {
@@ -82,7 +82,7 @@ const RenderedPanel = styled.div`
     padding: 0;
     border: none;
     border-radius: 3px;
-    background-color: #d5c4a1;
+    background-color: ${(props) => props.theme.colors.bg2};
   }
 `;
 
