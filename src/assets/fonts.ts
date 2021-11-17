@@ -5,6 +5,7 @@ import interRegular from "./Inter/Inter-Regular.woff2";
 import interItalic from "./Inter/Inter-ExtraLightItalic.woff2";
 import interBlack from "./Inter/Inter-Black.woff2";
 import interSemiBold from "./Inter/Inter-SemiBold.woff2";
+import interBold from "./Inter/Inter-Bold.woff2";
 import interMedium from "./Inter/Inter-Medium.woff2";
 
 export default createGlobalStyle`
@@ -45,6 +46,14 @@ export default createGlobalStyle`
     src: local('Inter'), url(${interSemiBold}) format('woff2');
     font-style:  normal;
     font-weight: 600;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: local('Inter'), url(${interBold}) format('woff2');
+    font-style:  normal;
+    font-weight: 700;
     font-display: swap;
   }
 
