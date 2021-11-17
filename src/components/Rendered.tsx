@@ -7,7 +7,7 @@ import marked from "marked";
 import DOMPurify from "dompurify";
 import renderLaTeXInElement from "katex/dist/contrib/auto-render";
 
-import "./stolen/katex.min.css";
+import "../stolen/katex/katex.min.css";
 import RenderedPanel from "./styles/RenderedPanel";
 
 /** override markdown outputs */

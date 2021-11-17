@@ -7,6 +7,7 @@ import type { MarkList } from "../lib/mark";
 import { BufferContainer, Mode } from "./BufferContainer";
 import Rendered from "./Rendered";
 import ClipBoard from "../lib/clipBoard";
+import GlobalFonts from "../assets/fonts";
 
 interface State {
   view: boolean; // true: edit, false: rendered
@@ -23,6 +24,7 @@ class App extends React.Component<{}, State> {
   private bufferGap: BufferGap;
   private clipBoard: ClipBoard;
   private documentState: DocumentState;
+  private KeventID: number;
 
   constructor(props: {}) {
     super(props);
@@ -36,10 +38,18 @@ class App extends React.Component<{}, State> {
     };
     // =====================================
     this.state = { view: true, mode: Mode.Normal };
+    this.KeventID = -1;
   }
 
   componentDidMount() {
-    KeyboardEvents.addListener(EventCategory.Mode, this.handleKeyPress);
+    this.KeventID = KeyboardEvents.addListener(
+      EventCategory.Mode,
+      this.handleKeyPress
+    );
+  }
+
+  componentWillUnmount() {
+    KeyboardEvents.removeListener(this.KeventID);
   }
 
   private handleKeyPress = (e: KeyboardEvent, keys: string) => {
@@ -76,22 +86,28 @@ class App extends React.Component<{}, State> {
   render() {
     if (this.state.view) {
       return (
-        <BufferContainer
-          bufferGap={this.bufferGap}
-          initPoint={this.documentState.point}
-          save={this.saveEditorState}
-          mode={this.state.mode}
-          visualMarks={this.documentState.visualMarkers}
-          clipBoard={this.clipBoard}
-          returnToNormal={this.returnToNormal}
-        />
+        <>
+          <GlobalFonts />
+          <BufferContainer
+            bufferGap={this.bufferGap}
+            initPoint={this.documentState.point}
+            save={this.saveEditorState}
+            mode={this.state.mode}
+            visualMarks={this.documentState.visualMarkers}
+            clipBoard={this.clipBoard}
+            returnToNormal={this.returnToNormal}
+          />
+        </>
       );
     } else {
       return (
-        <Rendered
-          text={this.bufferGap.getContents()}
-          scroll={this.documentState.scroll}
-        />
+        <>
+          <GlobalFonts />
+          <Rendered
+            text={this.bufferGap.getContents()}
+            scroll={this.documentState.scroll}
+          />
+        </>
       );
     }
   }

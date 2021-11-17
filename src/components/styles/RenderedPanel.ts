@@ -59,13 +59,14 @@ const RenderedPanel = styled.div`
 
   em {
     font-weight: 200;
+    font-style: italic;
     /* identical to box height, or 133% */
     letter-spacing: 0.005em;
     margin: 0px;
   }
 
   code {
-    font-family: source-code-pro, Consolas, monospace;
+    font-family: "JetBrains Mono", Consolas, monospace;
     background: ${(props) => props.theme.colors.bg1};
     padding: 0px 0.3em;
     border-radius: 2px;

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import BufferPanel from "./styles/BufferPanel";
 
 /** Cope💅 */
 const editorSettings = {
@@ -8,20 +9,12 @@ const editorSettings = {
   lineHeight: 19,
 };
 
-const BufferLine = styled.div`
-  white-space: pre;
-  height: ${editorSettings.lineHeight}px;
-  font-family: monospace, monospace;
-  font-style: normal;
-  font-size: ${editorSettings.fontSize}px;
-`;
-
 const Cursor = styled.div`
   height: ${editorSettings.lineHeight}px;
   width: 2px;
   position: absolute;
   visibility: ${(props) => (props.hidden ? "hiddin" : "visible")};
-  background: #3e3e3e;
+  background: ${(props) => props.theme.colors.fg1};
   top: 0px;
   left: 0px;
 `;
@@ -59,7 +52,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
         hidden={this.state.shown}
         style={{
           top: this.props.position.row * editorSettings.lineHeight,
-          left: 10 + this.props.position.column * editorSettings.fontWidth,
+          left: this.props.position.column * editorSettings.fontWidth,
         }}
       ></Cursor>
     );
@@ -79,7 +72,7 @@ class Buffer extends React.Component<BufferProps, {}> {
     let shoveCursor = true;
 
     return (
-      <div onPaste={this.props.onPaste} style={{ marginLeft: 10 }}>
+      <BufferPanel onPaste={this.props.onPaste}>
         {this.props.text.split("\n").map((line, i) => {
           if (shoveCursor && column - line.length > 0) {
             column -= line.length + 1;
@@ -87,11 +80,15 @@ class Buffer extends React.Component<BufferProps, {}> {
           } else {
             shoveCursor = false;
           }
-          return <BufferLine key={i}>{line}</BufferLine>;
+          return (
+            <div key={i} style={{ height: editorSettings.lineHeight }}>
+              {line}
+            </div>
+          );
         })}
 
         <CursorLayer position={{ row, column }} />
-      </div>
+      </BufferPanel>
     );
   }
 }
