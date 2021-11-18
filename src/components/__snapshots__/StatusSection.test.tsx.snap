@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`statusline section renders 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "zIndex": 99,
+    }
+  }
+>
+  <div
+    className="sc-bdvvtL jMyhKK"
+    color="#7c6f64"
+    dir="right"
+  />
+  <div
+    className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+    style={
+      Object {
+        "backgroundColor": "#7c6f64",
+        "color": "#fbf1c7",
+      }
+    }
+  >
+    V-LINE
+  </div>
+</div>
+`;
+
+exports[`statusline section renders 2`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "zIndex": 96,
+    }
+  }
+>
+  <div
+    className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+    style={
+      Object {
+        "backgroundColor": "#79740e",
+        "color": "#9d0006",
+      }
+    }
+  >
+    V-LINE
+  </div>
+  <div
+    className="sc-bdvvtL dvcpCb"
+    color="#79740e"
+    dir="left"
+  />
+</div>
+`;
