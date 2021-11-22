@@ -15,7 +15,6 @@ const RenderedPanel = styled.div`
   h1 {
     font-weight: 900;
     font-size: 60px;
-    /* identical to box height, or 44% */
     letter-spacing: 0.005em;
     color: ${(props) => props.theme.colors.red};
     margin: 0px;
@@ -24,7 +23,6 @@ const RenderedPanel = styled.div`
   h2 {
     font-weight: 600;
     font-size: 50px;
-    /* identical to box height, or 57% */
     letter-spacing: 0.005em;
     color: ${(props) => props.theme.colors.orange};
     margin: 0px;
@@ -33,7 +31,6 @@ const RenderedPanel = styled.div`
   h3 {
     font-weight: 500;
     font-size: 40px;
-    /* identical to box height, or 67% */
     letter-spacing: 0.005em;
     color: ${(props) => props.theme.colors.yellow};
     margin: 0px;
@@ -42,7 +39,6 @@ const RenderedPanel = styled.div`
   h4 {
     font-weight: 500;
     font-size: 35px;
-    /* identical to box height, or 80% */
     letter-spacing: 0.005em;
     color: ${(props) => props.theme.colors.green};
     margin: 0px;
@@ -51,7 +47,6 @@ const RenderedPanel = styled.div`
   h5 {
     font-weight: 500;
     font-size: 30px;
-    /* identical to box height, or 89% */
     letter-spacing: 0.005em;
     color: ${(props) => props.theme.colors.aqua};
     margin: 0px;
@@ -60,7 +55,6 @@ const RenderedPanel = styled.div`
   em {
     font-weight: 200;
     font-style: italic;
-    /* identical to box height, or 133% */
     letter-spacing: 0.005em;
     margin: 0px;
   }

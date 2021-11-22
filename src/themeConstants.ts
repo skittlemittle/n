@@ -12,6 +12,7 @@ export const COLORS_L = {
   bg1: "#ebdbb2",
   bg2: "#d5c4a1",
   bg4: "#a89984",
+  bg0_h: "#f9f5d7",
 };
 
 export const COLORS_D = {};
