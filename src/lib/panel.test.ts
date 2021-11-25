@@ -12,7 +12,10 @@ test("add / close tabs", () => {
 });
 
 test("select tabs", () => {
-  expect(brudda.getSelectedTab()).toEqual(-1);
+  expect(brudda.getSelectedTab()).toEqual(0);
+  brudda.addTab("another one");
+  brudda.addTab("ggggggggggggg");
+  expect(brudda.getSelectedTab()).toEqual(2);
   brudda.selectTab("owo");
   expect(brudda.getSelectedTab()).toEqual(0);
 });

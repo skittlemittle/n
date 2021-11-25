@@ -35,7 +35,7 @@ interface props {
   children: ReactNode;
 }
 
-const Panel = (props: props) => (
+const TextPanel = (props: props) => (
   <>
     <TabRibbon>
       {props.tabs.map((title, i) => {
@@ -60,5 +60,5 @@ const Panel = (props: props) => (
 
 type tabClick = (index: number, close?: boolean) => void;
 
-export default Panel;
+export default TextPanel;
 export type { tabClick };
