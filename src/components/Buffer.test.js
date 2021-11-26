@@ -1,5 +1,7 @@
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
+import { ThemeProvider } from "styled-components";
+import { AppTheme } from "../theme";
 
 import Buffer from "./Buffer";
 
@@ -17,20 +19,22 @@ afterEach(() => {
 
 test("shows the right fookin text innit", () => {
   act(() => {
-    render(<Buffer text="" point={0} />, container);
+    render(
+      <ThemeProvider theme={AppTheme}>
+        <Buffer text="" point={0} />
+      </ThemeProvider>,
+      container
+    );
   });
   expect(container.textContent).toBe("");
 
   act(() => {
-    render(<Buffer text="owo" point={0} />, container);
-  });
-  expect(container.textContent).toBe("owo");
-
-  act(() => {
     render(
-      <Buffer text={"owo \n did it break the line?"} point={0} />,
+      <ThemeProvider theme={AppTheme}>
+        <Buffer text={"mmm testdsds?"} point={0} />
+      </ThemeProvider>,
       container
     );
   });
-  expect(container.textContent).toBe("owo  did it break the line?");
+  expect(container.textContent).toBe("mmm testdsds?");
 });

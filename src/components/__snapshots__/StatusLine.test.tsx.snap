@@ -1,0 +1,545 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`insert colors 1`] = `
+<div
+  className="sc-eCImPb jVbEjO"
+>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 100,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#076678",
+          "color": "#fbf1c7",
+        }
+      }
+    >
+      INSERT
+    </div>
+    <div
+      className="sc-bdvvtL cXyHrn"
+      color="#076678"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 99,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#d5c4a1",
+          "color": "#7c6f64",
+        }
+      }
+    >
+      some file
+    </div>
+    <div
+      className="sc-bdvvtL dsnwVd"
+      color="#d5c4a1"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 98,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#d5c4a1",
+          "color": "#3c3836",
+        }
+      }
+    >
+      8?
+    </div>
+    <div
+      className="sc-bdvvtL dsnwVd"
+      color="#d5c4a1"
+      dir="left"
+    />
+  </div>
+  <div
+    className="sc-jRQBWg dKNDhz"
+  >
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 100,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL efovQs"
+        color="#076678"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#076678",
+            "color": "#fbf1c7",
+          }
+        }
+      >
+        3% : 3/300
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 99,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL xxeWu"
+        color="#d5c4a1"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#d5c4a1",
+            "color": "#7c6f64",
+          }
+        }
+      >
+        hah
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 98,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL xxeWu"
+        color="#d5c4a1"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#d5c4a1",
+            "color": "#3c3836",
+          }
+        }
+      >
+        hheh
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`normal colors 1`] = `
+<div
+  className="sc-eCImPb cBmgrh"
+>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 100,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#7c6f64",
+          "color": "#fbf1c7",
+        }
+      }
+    >
+      NORMAL
+    </div>
+    <div
+      className="sc-bdvvtL bYKFuF"
+      color="#7c6f64"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 99,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#d5c4a1",
+          "color": "#3c3836",
+        }
+      }
+    >
+      hm
+    </div>
+    <div
+      className="sc-bdvvtL dsnwVd"
+      color="#d5c4a1"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 98,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#ebdbb2",
+          "color": "#3c3836",
+        }
+      }
+    >
+      3
+    </div>
+    <div
+      className="sc-bdvvtL eCTkIa"
+      color="#ebdbb2"
+      dir="left"
+    />
+  </div>
+  <div
+    className="sc-jRQBWg dKNDhz"
+  >
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 100,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL jMyhKK"
+        color="#7c6f64"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#7c6f64",
+            "color": "#fbf1c7",
+          }
+        }
+      >
+        3% : 3/300
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 99,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL xxeWu"
+        color="#d5c4a1"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#d5c4a1",
+            "color": "#3c3836",
+          }
+        }
+      >
+        ae
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 98,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL gICKSd"
+        color="#ebdbb2"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#ebdbb2",
+            "color": "#3c3836",
+          }
+        }
+      >
+        r
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`rendered colors 1`] = `
+<div
+  className="sc-eCImPb jVbEjO"
+>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 100,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#8f3f71",
+          "color": "#fbf1c7",
+        }
+      }
+    >
+      RENDERED
+    </div>
+    <div
+      className="sc-bdvvtL ddHHXW"
+      color="#8f3f71"
+      dir="left"
+    />
+  </div>
+  <div
+    className="sc-jRQBWg dKNDhz"
+  >
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 100,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL IdxZ"
+        color="#8f3f71"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#8f3f71",
+            "color": "#fbf1c7",
+          }
+        }
+      >
+        3% : 3/300
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`visual colors 1`] = `
+<div
+  className="sc-eCImPb ytVIN"
+>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 100,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#af3a03",
+          "color": "#fbf1c7",
+        }
+      }
+    >
+      V_BLOCK
+    </div>
+    <div
+      className="sc-bdvvtL lmFPxZ"
+      color="#af3a03"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 99,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#d5c4a1",
+          "color": "#3c3836",
+        }
+      }
+    >
+      owo
+    </div>
+    <div
+      className="sc-bdvvtL dsnwVd"
+      color="#d5c4a1"
+      dir="left"
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "zIndex": 98,
+      }
+    }
+  >
+    <div
+      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
+      style={
+        Object {
+          "backgroundColor": "#a89984",
+          "color": "#fbf1c7",
+        }
+      }
+    >
+      3
+    </div>
+    <div
+      className="sc-bdvvtL jvswJW"
+      color="#a89984"
+      dir="left"
+    />
+  </div>
+  <div
+    className="sc-jRQBWg dKNDhz"
+  >
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 100,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL fVvAoC"
+        color="#af3a03"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#af3a03",
+            "color": "#fbf1c7",
+          }
+        }
+      >
+        3% : 3/300
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 99,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL xxeWu"
+        color="#d5c4a1"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#d5c4a1",
+            "color": "#3c3836",
+          }
+        }
+      >
+        ae
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "zIndex": 98,
+        }
+      }
+    >
+      <div
+        className="sc-bdvvtL gTyiTZ"
+        color="#a89984"
+        dir="right"
+      />
+      <div
+        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
+        style={
+          Object {
+            "backgroundColor": "#a89984",
+            "color": "#fbf1c7",
+          }
+        }
+      >
+        r
+      </div>
+    </div>
+  </div>
+</div>
+`;
