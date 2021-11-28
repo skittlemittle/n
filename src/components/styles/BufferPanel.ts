@@ -5,7 +5,7 @@ const BufferPanel = styled.div`
   color: ${(props) => props.theme.colors.fg1};
 
   margin: 0px;
-  height: 100%;
+  flex: 1 1 auto;
 
   font-family: "JetBrains Mono", monospace;
   font-style: normal;

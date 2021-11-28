@@ -67,7 +67,7 @@ interface DocStats {
 }
 
 type StatusMode = "insert" | "visual" | "rendered" | "normal";
-
+export type { StatusMode };
 interface sectionColors {
   bg: string;
   fg: string;

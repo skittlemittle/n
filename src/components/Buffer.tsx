@@ -63,6 +63,7 @@ interface BufferProps {
   text: string;
   point: number;
   onPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
+  status: (right: string[]) => React.ReactNode;
 }
 
 class Buffer extends React.Component<BufferProps, {}> {
@@ -72,23 +73,30 @@ class Buffer extends React.Component<BufferProps, {}> {
     let shoveCursor = true;
 
     return (
-      <BufferPanel onPaste={this.props.onPaste}>
-        {this.props.text.split("\n").map((line, i) => {
-          if (shoveCursor && column - line.length > 0) {
-            column -= line.length + 1;
-            row++;
-          } else {
-            shoveCursor = false;
-          }
-          return (
-            <div key={i} style={{ height: editorSettings.lineHeight }}>
-              {line}
-            </div>
-          );
-        })}
+      <>
+        <BufferPanel onPaste={this.props.onPaste}>
+          {this.props.text.split("\n").map((line, i) => {
+            if (shoveCursor && column - line.length > 0) {
+              column -= line.length + 1;
+              row++;
+            } else {
+              shoveCursor = false;
+            }
+            return (
+              <div key={i} style={{ height: editorSettings.lineHeight }}>
+                {line}
+              </div>
+            );
+          })}
 
-        <CursorLayer position={{ row, column }} />
-      </BufferPanel>
+          <CursorLayer position={{ row, column }} />
+        </BufferPanel>
+        {this.props.status([
+          `${
+            Math.round((this.props.point / this.props.text.length) * 100) || 0
+          }% ${row}: ${column}`,
+        ])}
+      </>
     );
   }
 }

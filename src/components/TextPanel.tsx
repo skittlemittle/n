@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Cross from "./styles/crossButton";
 
 const TabRibbon = styled.div`
+  flex: 0 1 auto; //
   display: flex;
   flex-direction: row;
   background-color: ${(props) => props.theme.colors.bg1};
@@ -27,6 +28,12 @@ const HlTab = styled(Tab)`
   background: ${(props) => props.theme.colors.bg0};
 `;
 
+const PanelBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 interface props {
   tabs: string[];
   selectedTab: number;
@@ -36,7 +43,7 @@ interface props {
 }
 
 const TextPanel = (props: props) => (
-  <>
+  <PanelBox>
     <TabRibbon>
       {props.tabs.map((title, i) => {
         if (i === props.selectedTab) {
@@ -55,7 +62,7 @@ const TextPanel = (props: props) => (
       })}
     </TabRibbon>
     {props.children}
-  </>
+  </PanelBox>
 );
 
 type tabClick = (index: number, close?: boolean) => void;

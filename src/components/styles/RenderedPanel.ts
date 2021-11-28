@@ -6,7 +6,7 @@ const RenderedPanel = styled.div`
 
   padding: 3em 2em;
   margin: 0px;
-  height: 100%;
+  flex: 1 1 auto;
 
   font-family: "Inter";
   font-style: normal;
