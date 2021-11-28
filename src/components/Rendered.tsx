@@ -2,13 +2,16 @@
  * Rendered buffer view
  */
 
-import React from "react";
+import { useEffect } from "react";
 import marked from "marked";
 import DOMPurify from "dompurify";
 import renderLaTeXInElement from "katex/dist/contrib/auto-render";
 
 import "../stolen/katex/katex.min.css";
 import RenderedPanel from "./styles/RenderedPanel";
+import StatusLine from "./StatusLine";
+import { toggleRendred } from "./SplitManager";
+import { EventCategory, KeyboardEvents } from "../lib/keyboardEvents";
 
 /** override markdown outputs */
 const renderer = {
@@ -27,11 +30,11 @@ marked.use({ renderer });
 
 interface Props {
   text: string;
-  scroll: number;
+  toggleRendered: toggleRendred;
 }
 
-class Rendered extends React.Component<Props, {}> {
-  componentDidMount() {
+const Rendered = (props: Props) => {
+  useEffect(() => {
     // I am completely sane, trust me
     renderLaTeXInElement(document.body, {
       delimiters: [
@@ -42,18 +45,38 @@ class Rendered extends React.Component<Props, {}> {
       ],
       throwOnError: false,
     });
-  }
+    const Kid = KeyboardEvents.addListener(
+      EventCategory.Mode,
+      (e: KeyboardEvent, keys: string) => {
+        switch (keys) {
+          case "Control,q":
+            props.toggleRendered(false);
+            break;
+          default:
+            break;
+        }
+      }
+    );
+    return () => KeyboardEvents.removeListener(Kid);
+  });
 
-  render() {
-    // 💅💅💅💅💅💅💅💅💅💅
-    return (
+  // 💅💅💅💅💅💅💅💅💅💅
+  return (
+    <>
       <RenderedPanel
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(marked(this.props.text)),
+          __html: DOMPurify.sanitize(marked(props.text)),
         }}
-      ></RenderedPanel>
-    );
-  }
-}
+      />
+      <StatusLine
+        stats={{
+          mode: "rendered",
+          left: ["RENDERED"],
+          right: [],
+        }}
+      />
+    </>
+  );
+};
 
 export default Rendered;

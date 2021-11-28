@@ -22,7 +22,6 @@ class KeyboardEvents {
     "Control",
     "Meta",
     "Alt",
-    "Escape",
   ];
   private modeKeys = ["i", "v", "Escape", "CapsLock", "Shift,V", "Control,q"];
   private pressed: string[]; // ordered list of the currently pressed keys

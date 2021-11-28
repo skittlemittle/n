@@ -4,7 +4,8 @@ import Buffer from "./Buffer";
 import BufferGap from "../lib/bufferGap";
 import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
 import { MarkList } from "../lib/mark";
-import ClipBoard from "../lib/clipBoard";
+import AppClipBoard from "../lib/clipBoard";
+import { toggleRendred } from "./SplitManager";
 
 enum Mode {
   Normal,
@@ -15,16 +16,18 @@ enum Mode {
 interface State {
   text: string;
   point: number;
+  mode: Mode;
 }
 
 interface Props {
   bufferGap: BufferGap;
   initPoint: number;
   save: (point: number) => void;
-  mode: Mode;
+  initMode: Mode;
+  clipBoard: AppClipBoard;
   visualMarks: MarkList;
-  clipBoard: ClipBoard;
-  returnToNormal: () => void;
+  saveMode: (m: Mode) => void;
+  toggleRendered: toggleRendred;
 }
 
 /** handles editing interactions with a buffer */
@@ -43,19 +46,22 @@ class BufferContainer extends React.Component<Props, State> {
     this.state = {
       text: this.bufferGap.getContents(),
       point: this.props.initPoint,
+      mode: this.props.initMode,
     };
     this.selectStart = "";
   }
 
   componentDidMount() {
-    this.KeventID = KeyboardEvents.addListener(
-      EventCategory.Buffer,
-      this.handleKeyPress
-    );
+    setTimeout(() => {
+      this.KeventID = KeyboardEvents.addListener(
+        EventCategory.Buffer,
+        this.handleKeyPress
+      );
+    }, 300);
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.mode !== prevProps.mode) this.initMode(this.props.mode);
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (this.state.mode !== prevState.mode) this.initMode(this.state.mode);
   }
 
   componentWillUnmount() {
@@ -72,7 +78,7 @@ class BufferContainer extends React.Component<Props, State> {
 
   /** deal with ctrl+v in insert mode */
   private handlePaste(e: React.ClipboardEvent<HTMLDivElement>) {
-    if (this.props.mode === Mode.Insert) {
+    if (this.state.mode === Mode.Insert) {
       const paste = e.clipboardData?.getData("text");
       this.bufferGap.insert(paste, this.state.point);
       this.setState({
@@ -83,7 +89,8 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   private handleKeyPress = (e: KeyboardEvent, keys: string) => {
-    switch (e.key) {
+    let renderBuffer = false;
+    switch (keys) {
       case "End":
         this.setState({
           point:
@@ -108,13 +115,21 @@ class BufferContainer extends React.Component<Props, State> {
       case "ArrowDown":
         this.movePointDown();
         break;
+      case "Escape":
+        if (this.state.mode !== Mode.Normal)
+          this.setState({ mode: Mode.Normal });
+        break;
+      case "Control,q":
+        renderBuffer = true;
+        break;
       default:
-        if (this.props.mode === Mode.Insert) this.insert(e);
-        else if (this.props.mode === Mode.Normal) this.normal(e);
-        else if (this.props.mode === Mode.Visual) this.visual(e);
+        if (this.state.mode === Mode.Insert) this.insert(e);
+        else if (this.state.mode === Mode.Normal) this.normal(e);
+        else if (this.state.mode === Mode.Visual) this.visual(e);
         break;
     }
     this.setState({ text: this.bufferGap.getContents() });
+    if (renderBuffer) this.props.toggleRendered(true);
   };
 
   private insert(e: KeyboardEvent, keys?: string) {
@@ -143,7 +158,18 @@ class BufferContainer extends React.Component<Props, State> {
     }
   }
 
-  private normal(e: KeyboardEvent, keys?: string) {}
+  private normal(e: KeyboardEvent, keys?: string) {
+    switch (e.key) {
+      case "i":
+        this.setState({ mode: Mode.Insert });
+        break;
+      case "v":
+        this.setState({ mode: Mode.Visual });
+        break;
+      default:
+        break;
+    }
+  }
 
   private visual(e: KeyboardEvent, keys?: string) {
     let exit = false;
@@ -159,7 +185,7 @@ class BufferContainer extends React.Component<Props, State> {
       default:
         break;
     }
-    if (exit) this.props.returnToNormal();
+    if (exit) this.setState({ mode: Mode.Normal });
   }
 
   render() {

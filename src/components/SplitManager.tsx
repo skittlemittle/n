@@ -5,23 +5,35 @@ import Rendered from "./Rendered";
 import BufferGap from "../lib/bufferGap";
 import makeMarkList, { MarkList } from "../lib/mark";
 import Panel from "../lib/panel";
-import { ClipBoardContext } from "./App";
+import AppClipBoard from "../lib/clipBoard";
 
 interface SplitState {
+  /** name of the active buffer */
   currentBuffer: string;
+  /** view of the current buffer */
+  view: BufferView;
 }
 
 class SplitManager extends React.Component<{}, SplitState> {
   private buffers: Map<string, Buff>;
   private panelState: Panel;
+  /** vim mode (app level), mode is persisted across buffers */
+  private lastMode: Mode;
+  private clipBoard: AppClipBoard;
 
   constructor(props: {}) {
     super(props);
     this.buffers = loadBuffers();
     this.panelState = new Panel();
     this.buffers.forEach((_, k) => this.panelState.addTab(k));
+    this.lastMode = Mode.Normal;
+    this.clipBoard = new AppClipBoard();
 
-    this.state = { currentBuffer: this.panelState.getSelectedTab()[1] };
+    const cBuff = this.panelState.getSelectedTab()[1];
+    this.state = {
+      currentBuffer: cBuff,
+      view: this.buffers.get(cBuff)?.view || "edit",
+    };
   }
 
   handleTabClick: tabClick = (index: number, close?: boolean) => {
@@ -33,7 +45,19 @@ class SplitManager extends React.Component<{}, SplitState> {
     if (b !== undefined) b.point = point;
   };
 
-  static contextType = ClipBoardContext;
+  saveMode = (m: Mode) => {
+    this.lastMode = m;
+  };
+
+  /** set the view and trigger a rerender */
+  toggleRendered = (t: boolean) => {
+    const b = this.buffers.get(this.state.currentBuffer);
+    if (b !== undefined) {
+      b.view = t ? "rendered" : "edit";
+      this.setState({ view: b.view });
+    }
+  };
+
   render() {
     let buffer = this.buffers.get(this.state.currentBuffer);
     buffer = buffer === undefined ? makeEmptyBuffer() : buffer;
@@ -50,12 +74,18 @@ class SplitManager extends React.Component<{}, SplitState> {
             bufferGap={buffer.bufferGap}
             initPoint={buffer.point}
             save={this.saveEditState}
-            mode={Mode.Insert}
+            initMode={this.lastMode}
+            clipBoard={this.clipBoard}
             visualMarks={buffer.visualMarkers}
-            clipBoard={this.context}
-            returnToNormal={() => {}}
+            saveMode={this.saveMode}
+            toggleRendered={this.toggleRendered}
           />
-        )) || <Rendered text={buffer.bufferGap.getContents()} />}
+        )) || (
+          <Rendered
+            text={buffer.bufferGap.getContents()}
+            toggleRendered={this.toggleRendered}
+          />
+        )}
       </TextPanel>
     );
   }
@@ -87,4 +117,6 @@ function loadBuffers() {
   return buffers;
 }
 
+type toggleRendred = (t: boolean) => void;
 export default SplitManager;
+export type { toggleRendred };
