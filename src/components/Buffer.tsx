@@ -25,6 +25,8 @@ interface CursorState {
 
 interface CursorProps {
   position: { row: number; column: number };
+  /** id of parent buffer */
+  parent: string;
 }
 
 /** Renders a text cursor */
@@ -47,12 +49,21 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
   }
 
   render() {
+    const offsets = document
+      .getElementById(this.props.parent)
+      ?.getBoundingClientRect();
+    let top = 0;
+    let left = 0;
+    if (offsets) {
+      top = offsets.top;
+      left = offsets.left;
+    }
     return (
       <Cursor
         hidden={this.state.shown}
         style={{
-          top: this.props.position.row * editorSettings.lineHeight,
-          left: this.props.position.column * editorSettings.fontWidth,
+          top: top + this.props.position.row * editorSettings.lineHeight,
+          left: left + this.props.position.column * editorSettings.fontWidth,
         }}
       ></Cursor>
     );
@@ -74,7 +85,7 @@ class Buffer extends React.Component<BufferProps, {}> {
 
     return (
       <>
-        <BufferPanel onPaste={this.props.onPaste}>
+        <BufferPanel id={"buffer-panel-0"} onPaste={this.props.onPaste}>
           {this.props.text.split("\n").map((line, i) => {
             if (shoveCursor && column - line.length > 0) {
               column -= line.length + 1;
@@ -89,7 +100,7 @@ class Buffer extends React.Component<BufferProps, {}> {
             );
           })}
 
-          <CursorLayer position={{ row, column }} />
+          <CursorLayer position={{ row, column }} parent={"buffer-panel-0"} />
         </BufferPanel>
         {this.props.status([
           `${
