@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Mode } from "./BufferContainer";
+import StatusLine, { StatusMode } from "./StatusLine";
 import BufferPanel from "./styles/BufferPanel";
 
 /** Cope💅 */
@@ -9,14 +11,17 @@ const editorSettings = {
   lineHeight: 19,
 };
 
-const Cursor = styled.div`
+const Cursor = styled.div.attrs((props: { block: boolean }) => ({
+  block: props.block,
+}))`
   height: ${editorSettings.lineHeight}px;
-  width: 2px;
+  width: ${(props) => (props.block ? editorSettings.fontWidth + "px" : "2px")};
   position: absolute;
   visibility: ${(props) => (props.hidden ? "hiddin" : "visible")};
   background: ${(props) => props.theme.colors.fg1};
   top: 0px;
   left: 0px;
+  z-index: 1;
 `;
 
 interface CursorState {
@@ -25,6 +30,7 @@ interface CursorState {
 
 interface CursorProps {
   position: { row: number; column: number };
+  block: boolean;
   /** id of parent buffer */
   parent: string;
 }
@@ -61,6 +67,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
     return (
       <Cursor
         hidden={this.state.shown}
+        block={this.props.block}
         style={{
           top: top + this.props.position.row * editorSettings.lineHeight,
           left: left + this.props.position.column * editorSettings.fontWidth,
@@ -70,11 +77,26 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
   }
 }
 
+function status(mode: Mode, left: string[], right: string[]) {
+  let m: StatusMode = "normal";
+  if (mode === Mode.Insert) m = "insert";
+  else if (mode === Mode.Visual) m = "visual";
+  return (
+    <StatusLine
+      stats={{
+        mode: m,
+        left: [m.toUpperCase(), ...left],
+        right: right,
+      }}
+    />
+  );
+}
+
 interface BufferProps {
   text: string;
   point: number;
   onPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
-  status: (right: string[]) => React.ReactNode;
+  mode: Mode;
 }
 
 class Buffer extends React.Component<BufferProps, {}> {
@@ -100,13 +122,21 @@ class Buffer extends React.Component<BufferProps, {}> {
             );
           })}
 
-          <CursorLayer position={{ row, column }} parent={"buffer-panel-0"} />
+          <CursorLayer
+            position={{ row, column }}
+            parent={"buffer-panel-0"}
+            block={this.props.mode !== Mode.Insert}
+          />
         </BufferPanel>
-        {this.props.status([
-          `${
-            Math.round((this.props.point / this.props.text.length) * 100) || 0
-          }% ${row}: ${column}`,
-        ])}
+        {status(
+          this.props.mode,
+          ["owo"],
+          [
+            `${
+              Math.round((this.props.point / this.props.text.length) * 100) || 0
+            }% ${row}: ${column}`,
+          ]
+        )}
       </>
     );
   }

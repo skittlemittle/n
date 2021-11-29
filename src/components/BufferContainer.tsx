@@ -6,7 +6,6 @@ import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
 import { MarkList } from "../lib/mark";
 import AppClipBoard from "../lib/clipBoard";
 import { toggleRendred } from "./SplitManager";
-import StatusLine, { StatusMode } from "./StatusLine";
 
 enum Mode {
   Normal,
@@ -189,29 +188,13 @@ class BufferContainer extends React.Component<Props, State> {
     if (exit) this.setState({ mode: Mode.Normal });
   }
 
-  private status(mode: Mode, left: string[]) {
-    let m: StatusMode = "normal";
-    if (mode === Mode.Insert) m = "insert";
-    else if (mode === Mode.Visual) m = "visual";
-
-    return (right: string[]) => (
-      <StatusLine
-        stats={{
-          mode: m,
-          left: [m.toUpperCase(), ...left],
-          right: right,
-        }}
-      />
-    );
-  }
-
   render() {
     return (
       <Buffer
         onPaste={(e) => this.handlePaste(e)}
         text={this.state.text}
         point={this.state.point}
-        status={this.status(this.state.mode, ["owo"])}
+        mode={this.state.mode}
       />
     );
   }

@@ -32,6 +32,7 @@ const PanelBox = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: ${(props) => props.theme.colors.bg0};
 `;
 
 interface props {
