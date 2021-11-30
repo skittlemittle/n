@@ -17,14 +17,14 @@ const makeMarkList = (): MarkList => {
    * @param location: where in the text to place the mark, positive int, optinal.
    * @return a mark, the marks location field is set to location if location passed is a positive int, -1 otherwise
    */
-  const createMark = (location?: number): string => {
+  const createMark = (location?: number, name?: string): string => {
     const m = {
       location: location !== undefined && location >= 0 ? location : -1,
       fixed: false,
     };
-    const name = (Math.random() + 1).toString(36).substring(2);
-    markTable.set(name, m);
-    return name;
+    const n = name || (Math.random() + 1).toString(36).substring(2);
+    markTable.set(n, m);
+    return n;
   };
 
   /** remove a mark
@@ -111,7 +111,7 @@ const makeMarkList = (): MarkList => {
 };
 
 interface MarkList {
-  createMark: (location?: number) => string;
+  createMark: (location?: number, name?: string) => string;
   removeMark: (name: string) => boolean;
   getMark: (name: string) => Mark | undefined;
   whereIs: (name: string) => number | undefined;

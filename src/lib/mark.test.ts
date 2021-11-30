@@ -13,6 +13,10 @@ test("make mark, kill mark", () => {
   m = Marks.getMark(Marks.createMark(0));
   expect(m?.location).toEqual(0);
 
+  let o = Marks.createMark(l, "gaming_corporate_office");
+  expect(o).toEqual("gaming_corporate_office");
+
+  // delete when it exists and doesnt
   expect(Marks.removeMark(Marks.createMark())).toEqual(true);
   expect(Marks.removeMark("owo")).toEqual(true);
 });
