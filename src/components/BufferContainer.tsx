@@ -11,6 +11,8 @@ enum Mode {
   Normal,
   Insert,
   Visual,
+  Visual_Line,
+  Visual_Block,
 }
 
 interface State {
@@ -25,30 +27,44 @@ interface Props {
   save: (point: number) => void;
   initMode: Mode;
   clipBoard: AppClipBoard;
-  visualMarks: MarkList;
+  marks: MarkList;
   saveMode: (m: Mode) => void;
   toggleRendered: toggleRendred;
+}
+
+interface VisualMarks {
+  /** location of the point when visual mode is started */
+  selectStart: string;
+  /** the beginning of the line selectStart is on */
+  lineStart: string;
+  /** the end of the line selectStart is on */
+  lineEnd: string;
 }
 
 /** handles editing interactions with a buffer */
 class BufferContainer extends React.Component<Props, State> {
   private bufferGap: BufferGap;
-  private visMarks: MarkList;
+  private marks: MarkList;
   private KeventID: number;
-  private selectStart: string; // visual mode select marker
+  private visMarks: VisualMarks;
 
   constructor(props: Props) {
     super(props);
     this.KeventID = -1;
     // save me from long ass names
     this.bufferGap = this.props.bufferGap;
-    this.visMarks = this.props.visualMarks;
+    this.marks = this.props.marks;
+    this.visMarks = {
+      selectStart: "",
+      lineStart: "",
+      lineEnd: "",
+    };
+
     this.state = {
       text: this.bufferGap.getContents(),
       point: this.props.initPoint,
       mode: this.props.initMode,
     };
-    this.selectStart = "";
   }
 
   componentDidMount() {
@@ -72,7 +88,14 @@ class BufferContainer extends React.Component<Props, State> {
   /** initialise stuff on mode changes */
   private initMode(mode: Mode) {
     if (mode === Mode.Visual) {
-      this.selectStart = this.visMarks.createMark(this.state.point);
+      this.visMarks.selectStart = this.marks.createMark(this.state.point);
+    } else if (mode === Mode.Visual_Line) {
+      this.visMarks.lineStart = this.marks.createMark(
+        this.state.point - this.distanceToNewLine(this.state.point, false)
+      );
+      this.visMarks.lineEnd = this.marks.createMark(
+        this.state.point + this.distanceToNewLine(this.state.point, true)
+      );
     }
   }
 
@@ -91,6 +114,19 @@ class BufferContainer extends React.Component<Props, State> {
   private handleKeyPress = (e: KeyboardEvent, keys: string) => {
     let renderBuffer = false;
     switch (keys) {
+      case "Control,q":
+        renderBuffer = true;
+        break;
+      default:
+        break;
+    }
+    if (renderBuffer) {
+      this.props.toggleRendered(true);
+      return;
+    }
+
+    // single key stuff
+    switch (e.key) {
       case "End":
         this.setState({
           point:
@@ -119,17 +155,18 @@ class BufferContainer extends React.Component<Props, State> {
         if (this.state.mode !== Mode.Normal)
           this.setState({ mode: Mode.Normal });
         break;
-      case "Control,q":
-        renderBuffer = true;
-        break;
       default:
         if (this.state.mode === Mode.Insert) this.insert(e);
-        else if (this.state.mode === Mode.Normal) this.normal(e);
-        else if (this.state.mode === Mode.Visual) this.visual(e);
+        else if (this.state.mode === Mode.Normal) this.normal(e, keys);
+        else if (
+          this.state.mode === Mode.Visual ||
+          this.state.mode === Mode.Visual_Line ||
+          this.state.mode === Mode.Visual_Block
+        )
+          this.visual(e, keys);
         break;
     }
     this.setState({ text: this.bufferGap.getContents() });
-    if (renderBuffer) this.props.toggleRendered(true);
   };
 
   private insert(e: KeyboardEvent, keys?: string) {
@@ -159,6 +196,20 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   private normal(e: KeyboardEvent, keys?: string) {
+    let comboHappened = false;
+    switch (keys) {
+      case "Shift,V":
+        this.setState({ mode: Mode.Visual_Line });
+        comboHappened = true;
+        break;
+      case "Control,v":
+        this.setState({ mode: Mode.Visual_Block });
+        comboHappened = true;
+        break;
+      default:
+        break;
+    }
+    if (comboHappened) return;
     switch (e.key) {
       case "i":
         this.setState({ mode: Mode.Insert });
@@ -173,19 +224,25 @@ class BufferContainer extends React.Component<Props, State> {
 
   private visual(e: KeyboardEvent, keys?: string) {
     let exit = false;
+    const { point, mark } = this.chooseVisualRegion();
     switch (e.key) {
       case "y":
-        this.yank(this.selectStart);
+        this.doOverRegion(mark, point, this.yank);
         exit = true;
         break;
       case "d":
-        this.delete(this.selectStart);
+        this.doOverRegion(mark, point, this.delete);
         exit = true;
         break;
       default:
         break;
     }
-    if (exit) this.setState({ mode: Mode.Normal });
+    if (exit) {
+      this.visMarks.selectStart = "";
+      this.visMarks.lineEnd = "";
+      this.visMarks.lineStart = "";
+      this.setState({ mode: Mode.Normal });
+    }
   }
 
   render() {
@@ -199,48 +256,58 @@ class BufferContainer extends React.Component<Props, State> {
     );
   }
 
-  //============ visual ====================================================
-  /** copy the text between a mark and the point to the clipboard
+  //============ commands ====================================================
+  /** yank text in a region
+   * @param start: location to start deleting from
+   * @param end: location to end on
+   */
+  private yank = (start: number, end: number) => {
+    const t = this.bufferGap.getSection(start, end);
+    this.props.clipBoard.paste(t);
+    navigator.clipboard.writeText(t);
+  };
+  /** delete and yank text in a region
+   * @param start: location to start deleting from
+   * @param end: location to end on
+   */
+  private delete = (start: number, end: number) => {
+    this.yank(start, end);
+    this.bufferGap.delete(true, end - start, start);
+    this.setState({ point: start });
+  };
+
+  //============ helpers====================================================
+
+  /** do something over the region of text between the mark and pointer, action performed by callback
    * @param name: marks name
-   * @param del: set to true to delete the text, false to leave it be
+   * @param point: specify a point, defaults to current point location.
+   * @param callback: action to perform over region
    * @return true on success, false if the mark doesnt exist
    */
-  private yank(name: string, del = false): boolean {
-    let p = this.state.point;
-    const wasBefore = this.visMarks.pointBeforeMark(p, name);
+  private doOverRegion(
+    name: string,
+    point = this.state.point,
+    callback: (start: number, end: number) => void | boolean
+  ): boolean {
+    let p = point;
+    const wasBefore = this.marks.pointBeforeMark(p, name);
     // make sure the point is before the mark
     if (!wasBefore) {
-      const maybeP = this.visMarks.swapPointAndMark(p, name);
+      const maybeP = this.marks.swapPointAndMark(p, name);
       if (maybeP !== false) p = maybeP;
       else return false;
     }
 
-    const l = this.visMarks.whereIs(name);
+    const l = this.marks.whereIs(name);
     if (l !== undefined) {
-      const t = this.bufferGap.getSection(p, l);
-      this.props.clipBoard.paste(t);
-      navigator.clipboard.writeText(t);
-      if (del) {
-        this.bufferGap.delete(true, l - p, p);
-        this.setState({ point: p });
-      }
+      if (callback(p, l) === false) return false;
     } else {
       return false;
     }
     // ok clean up now
-    this.visMarks.removeMark(name);
-    this.selectStart = "";
+    this.marks.removeMark(name);
     return true;
   }
-
-  /** delete and yank the selected text
-   * @param name: select marks name
-   */
-  private delete(name: string): boolean {
-    return this.yank(name, true);
-  }
-
-  //============ helpers====================================================
 
   private decrementPoint(i: number) {
     return this.state.point === 0 ? 0 : this.state.point - i;
@@ -303,6 +370,53 @@ class BufferContainer extends React.Component<Props, State> {
     }
     if (p <= this.state.text.length) this.setState({ point: p });
   }
+
+  /** returns the name of the furthest mark from a point */
+  private furthestFrom = (p: number, marks: string[]) => {
+    let name = marks[0];
+    let f = 0;
+
+    for (let i of marks) {
+      const m = this.marks.getMark(i)?.location;
+      if (m !== undefined) {
+        const d = Math.abs(p - m);
+        if (d > f) {
+          f = d;
+          name = i;
+        }
+      }
+    }
+    return name;
+  };
+
+  /** choose the point and mark to operate on for the visual modes
+   * @return {point, mark} the point and mark
+   */
+  private chooseVisualRegion = () => {
+    const p = this.state.point;
+    let point: number, mark: string;
+    if (this.state.mode === Mode.Visual) {
+      // ===visual===
+      mark = this.visMarks.selectStart;
+      point = p;
+    } else {
+      // ===visual line===
+      const lineStart =
+        this.marks.getMark(this.visMarks.lineStart)?.location || p;
+      // point before line visual mode was started on
+      if (p - lineStart < 0) {
+        point = p - this.distanceToNewLine(p, false);
+      } else {
+        // point on or after line visual mode was started on
+        point = p + this.distanceToNewLine(p, true);
+      }
+      mark = this.furthestFrom(point, [
+        this.visMarks.lineStart,
+        this.visMarks.lineEnd,
+      ]);
+    }
+    return { point, mark };
+  };
 }
 
 export { BufferContainer, Mode };

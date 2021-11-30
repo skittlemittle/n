@@ -79,13 +79,25 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
 
 function status(mode: Mode, left: string[], right: string[]) {
   let m: StatusMode = "normal";
-  if (mode === Mode.Insert) m = "insert";
-  else if (mode === Mode.Visual) m = "visual";
+  let m_name: string = m;
+  if (mode === Mode.Insert) {
+    m = "insert";
+    m_name = m;
+  } else if (mode === Mode.Visual) {
+    m = "visual";
+    m_name = m;
+  } else if (mode === Mode.Visual_Line) {
+    m = "visual";
+    m_name = "v-line";
+  } else if (mode === Mode.Visual_Block) {
+    m = "visual";
+    m_name = "v-block";
+  }
   return (
     <StatusLine
       stats={{
         mode: m,
-        left: [m.toUpperCase(), ...left],
+        left: [m_name.toUpperCase(), ...left],
         right: right,
       }}
     />

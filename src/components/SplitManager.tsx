@@ -76,7 +76,7 @@ class SplitManager extends React.Component<{}, SplitState> {
             save={this.saveEditState}
             initMode={this.lastMode}
             clipBoard={this.clipBoard}
-            visualMarks={buffer.visualMarkers}
+            marks={buffer.visualMarkers}
             saveMode={this.saveMode}
             toggleRendered={this.toggleRendered}
           />
