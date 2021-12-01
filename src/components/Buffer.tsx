@@ -18,10 +18,12 @@ const Cursor = styled.div.attrs((props: { block: boolean }) => ({
   width: ${(props) => (props.block ? editorSettings.fontWidth + "px" : "2px")};
   position: absolute;
   visibility: ${(props) => (props.hidden ? "hiddin" : "visible")};
-  background: ${(props) => props.theme.colors.fg1};
+  background: ${(props) =>
+    props.block ? props.theme.colors.orange_l : props.theme.colors.fg1};
+  opacity: ${(props) => (props.block ? 0.45 : 1)};
   top: 0px;
   left: 0px;
-  z-index: 1;
+  z-index: 2;
 `;
 
 interface CursorState {
@@ -140,6 +142,7 @@ class Buffer extends React.Component<BufferProps, {}> {
             block={this.props.mode !== Mode.Insert}
           />
         </BufferPanel>
+
         {status(
           this.props.mode,
           ["owo"],

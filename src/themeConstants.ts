@@ -2,6 +2,7 @@
 export const COLORS_L = {
   red: "#9d0006",
   orange: "#af3a03",
+  orange_l: "#d65d0e",
   yellow: "#b57614",
   green: "#79740e",
   blue: "#076678",

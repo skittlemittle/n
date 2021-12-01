@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`menu style 1`] = `
+Array [
+  " ",
+  <div
+    className="sc-bdvvtL dEZTpU"
+  >
+    <div
+      className="sc-gsDKAQ jhKwWD"
+      onClick={[Function]}
+    >
+      owo
+    </div>
+    <div
+      className="sc-gsDKAQ jhKwWD"
+      onClick={[Function]}
+    >
+      big chungus zone
+    </div>
+    <div
+      className="sc-gsDKAQ jhKwWD"
+      onClick={[Function]}
+    >
+      big chungus zone
+    </div>
+    <div
+      className="sc-gsDKAQ jhKwWD"
+      onClick={[Function]}
+    >
+      big chungus zone
+    </div>
+  </div>,
+]
+`;
