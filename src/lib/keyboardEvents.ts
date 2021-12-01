@@ -4,6 +4,26 @@ enum EventCategory {
   Nothing,
 }
 
+const bufferIgnored = [
+  "Insert",
+  "PageUp",
+  "PageDown",
+  "CapsLock",
+  "Shift",
+  "Control",
+  "Meta",
+  "Alt",
+];
+
+const modeKeys = [
+  "i",
+  "v",
+  "Escape",
+  "CapsLock",
+  "Shift,V",
+  "Control,q",
+  "Control,v",
+];
 /**
  * The global keyboard handler
  *
@@ -13,17 +33,6 @@ class KeyboardEvents {
   private listenerIds: Map<EventCategory, number[]>;
   private listeners: Map<number, handler>;
   private ID = 0;
-  private bufferIgnored = [
-    "Insert",
-    "PageUp",
-    "PageDown",
-    "CapsLock",
-    "Shift",
-    "Control",
-    "Meta",
-    "Alt",
-  ];
-  private modeKeys = ["i", "v", "Escape", "CapsLock", "Shift,V", "Control,q"];
   private pressed: string[]; // ordered list of the currently pressed keys
 
   constructor() {
@@ -45,14 +54,15 @@ class KeyboardEvents {
 
   /** send currently pressed keys / key combos to the relevant subscribers */
   private onKeyDown(e: KeyboardEvent) {
-    this.pressed.push(e.key);
+    if (["Shift, Control"].includes(e.key)) this.pressed.unshift(e.key);
+    else this.pressed.push(e.key);
 
-    if (this.modeKeys.includes(this.pressed.toString())) {
+    if (modeKeys.includes(this.pressed.toString())) {
       this.call(EventCategory.Mode, e);
     }
 
     // tell the buffer right away about single keypresses
-    if (!this.bufferIgnored.includes(e.key)) {
+    if (!bufferIgnored.includes(e.key)) {
       this.call(EventCategory.Buffer, e);
     }
   }
@@ -101,4 +111,4 @@ class KeyboardEvents {
 type handler = (e: KeyboardEvent, keys: string) => void;
 
 const deezNuts = new KeyboardEvents();
-export { deezNuts as KeyboardEvents, EventCategory };
+export { deezNuts as KeyboardEvents, EventCategory, bufferIgnored, modeKeys };
