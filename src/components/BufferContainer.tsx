@@ -238,9 +238,14 @@ class BufferContainer extends React.Component<Props, State> {
         break;
     }
     if (exit) {
-      this.visMarks.selectStart = "";
-      this.visMarks.lineEnd = "";
-      this.visMarks.lineStart = "";
+      // kys, how could the key NOT BE IN THE DAMN OBJECT IF IM ITERATING IT DUMBASS
+      // WDYM "ITS IMPLICITLY ANY" ITS A GODDAMN KEY AND IT *IS* ON THE OBJECT
+      for (let key in this.visMarks) {
+        //@ts-ignore
+        this.marks.removeMark(this.visMarks[key]);
+        //@ts-ignore
+        this.visMarks[key] = "";
+      }
       this.setState({ mode: Mode.Normal });
     }
   }
