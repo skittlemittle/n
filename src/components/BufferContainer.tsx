@@ -2,7 +2,11 @@ import React from "react";
 
 import Buffer from "./Buffer";
 import BufferGap from "../lib/bufferGap";
-import { KeyboardEvents, EventCategory } from "../lib/keyboardEvents";
+import {
+  KeyboardEvents,
+  EventCategory,
+  bufferIgnored,
+} from "../lib/keyboardEvents";
 import { MarkList } from "../lib/mark";
 import AppClipBoard from "../lib/clipBoard";
 import { toggleRendred } from "./SplitManager";
@@ -45,12 +49,12 @@ interface VisualMarks {
 class BufferContainer extends React.Component<Props, State> {
   private bufferGap: BufferGap;
   private marks: MarkList;
-  private KeventID: number;
+  private KeventIDs: number[];
   private visMarks: VisualMarks;
 
   constructor(props: Props) {
     super(props);
-    this.KeventID = -1;
+    this.KeventIDs = [];
     // save me from long ass names
     this.bufferGap = this.props.bufferGap;
     this.marks = this.props.marks;
@@ -69,9 +73,12 @@ class BufferContainer extends React.Component<Props, State> {
 
   componentDidMount() {
     setTimeout(() => {
-      this.KeventID = KeyboardEvents.addListener(
-        EventCategory.Buffer,
-        this.handleKeyPress
+      this.KeventIDs.push(
+        KeyboardEvents.addListener(
+          EventCategory.Buffer,
+          this.handleSingleKeyPress
+        ),
+        KeyboardEvents.addListener(EventCategory.Mode, this.handleKeyCombo)
       );
     }, 300);
   }
@@ -82,7 +89,7 @@ class BufferContainer extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.props.save(this.state.point);
-    KeyboardEvents.removeListener(this.KeventID);
+    this.KeventIDs.forEach((k) => KeyboardEvents.removeListener(k));
   }
 
   /** initialise stuff on mode changes */
@@ -111,21 +118,7 @@ class BufferContainer extends React.Component<Props, State> {
     }
   }
 
-  private handleKeyPress = (e: KeyboardEvent, keys: string) => {
-    let renderBuffer = false;
-    switch (keys) {
-      case "Control,q":
-        renderBuffer = true;
-        break;
-      default:
-        break;
-    }
-    if (renderBuffer) {
-      this.props.toggleRendered(true);
-      return;
-    }
-
-    // single key stuff
+  private handleSingleKeyPress = (e: KeyboardEvent, keys: string) => {
     switch (e.key) {
       case "End":
         this.setState({
@@ -156,7 +149,7 @@ class BufferContainer extends React.Component<Props, State> {
           this.setState({ mode: Mode.Normal });
         break;
       default:
-        if (this.state.mode === Mode.Insert) this.insert(e);
+        if (this.state.mode === Mode.Insert) this.insert(e, keys);
         else if (this.state.mode === Mode.Normal) this.normal(e, keys);
         else if (
           this.state.mode === Mode.Visual ||
@@ -169,7 +162,31 @@ class BufferContainer extends React.Component<Props, State> {
     this.setState({ text: this.bufferGap.getContents() });
   };
 
+  private handleKeyCombo = (e: KeyboardEvent, keys: string) => {
+    let renderBuffer = false;
+    switch (keys) {
+      case "Control,q":
+        renderBuffer = true;
+        break;
+      case "Shift,V":
+        if (this.state.mode === Mode.Normal)
+          this.setState({ mode: Mode.Visual_Line });
+        break;
+      case "Control,v":
+        if (this.state.mode === Mode.Normal)
+          this.setState({ mode: Mode.Visual_Block });
+        break;
+      default:
+        break;
+    }
+    if (renderBuffer) {
+      this.props.toggleRendered(true);
+    }
+  };
+
   private insert(e: KeyboardEvent, keys?: string) {
+    const prefix = keys ? keys.split(",")[0] : "";
+    if (bufferIgnored.includes(prefix) && prefix !== "Shift") return;
     switch (e.key) {
       case "Enter":
         this.bufferGap.insert("\n", this.state.point);
