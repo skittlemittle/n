@@ -1,7 +1,8 @@
 // vim command stuff
 
 const commandPatterns = [
-  /\d?[bcdef.moprtuwy$`'}{hjkl]/, // repeat? command
+  /\d+[bcdef.moprtuwy$`'}{hjkl]$/, // repeat? command
+  /^[bcdef.moprtuwy$`'}{hjkl]$/,
   // takes movement
   /[cdy><]\d/,
   /[cdy><]['`hjklebfw0$}{]/,
@@ -9,35 +10,34 @@ const commandPatterns = [
   /[cdy][t]/, // takes another command
   /[`'m]\w/, // takes mark names
   /[frt]./, // takes any char
-  /\d\d/, // number
+  /\d+/, // number
 ];
 
 /** validate additions to a command
- * @param c: command word
- * @param stack: the current command stack
+ * @param c: command word, single char
+ * @param command: the last typed in command, single char
  * @returns true if c is a valid next word in the command, false if it isnt.
  */
-const validNextWord = (c: string, stack: string[]): boolean => {
-  let l = "";
-  [c, ...stack].forEach((char) => (l = l.concat(char)));
-  return commandPatterns.some((regex) => regex.test(l));
+const validNextWord = (c: string, command: string): boolean => {
+  if (c.length > 1) return false;
+  return commandPatterns.some((regex) => regex.test(command + c));
 };
 
 /**
  * holds and validates vim commands as they get typed in.
  */
-const makeCommandStack = () => {
-  const cStack: string[] = [];
+const makeCommand = () => {
+  const command: string[] = [];
 
   const push = (c: string) => {
-    if (validNextWord(c, cStack)) {
-      cStack.unshift(c);
+    if (validNextWord(c, command[command.length - 1])) {
+      command.push(c);
       return true;
     }
     return false;
   };
 
-  const flush = () => cStack.splice(0, cStack.length);
+  const flush = () => command.splice(0, command.length);
 
   return {
     push,
@@ -47,15 +47,15 @@ const makeCommandStack = () => {
 
 interface CommandStack {
   /** push the next bit of the command on, if it is a valid next command.
-   * @param c: the command word to put on the stack
+   * @param c: the command word to add to the command
    * @returns true if the command was pushed, false if the command was not valid
    */
   push: (c: string) => boolean;
-  /** empty the stack
-   * @returns the contents of the stack
+  /** clear the command
+   * @returns the command thus far
    */
   flush: () => string[];
 }
 
-export { makeCommandStack, validNextWord };
+export { makeCommand, validNextWord };
 export type { CommandStack };
