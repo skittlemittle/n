@@ -14,6 +14,7 @@ export const COLORS_L = {
   bg0: "#fbf1c7",
   bg1: "#ebdbb2",
   bg2: "#d5c4a1",
+  bg3: "#bdae93",
   bg4: "#a89984",
   bg0_h: "#f9f5d7",
 };
