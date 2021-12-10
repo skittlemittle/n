@@ -29,6 +29,8 @@ const HlTab = styled(Tab)`
 `;
 
 const PanelBox = styled.div`
+  overflow: hidden;
+  width: 100%;
   display: flex;
   flex-direction: column;
   height: 100%;
