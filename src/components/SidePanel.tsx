@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import Toolbar from "./Toolbar";
 import face from "../assets/icons/face.svg";
-import FileTree from "./FileTree";
+import FileTree, { requestFileLoad } from "./FileTree";
 
 const PanelBox = styled.div`
   float: left;
@@ -21,19 +21,23 @@ interface props {
   /** toolbars and stuff */
   bar: React.ReactNode;
   /** the thing the toolbar pulls up, filetree etc */
-  panel: Panels;
+  panel: React.ReactNode;
 }
 
 const SidePanelView = (props: props) => {
   return (
     <PanelBox>
       {props.bar}
-      {props.panel === Panels.FileTree && <FileTree />}
+      {props.panel}
     </PanelBox>
   );
 };
 
-const SidePanel = () => {
+interface panelProps {
+  requestFileLoad: requestFileLoad;
+}
+
+const SidePanel = ({ requestFileLoad }: panelProps) => {
   const [currentPanel, changePanel] = useState(Panels.None);
 
   const handleToolClick = (clicked: Panels) => {
@@ -51,7 +55,11 @@ const SidePanel = () => {
           ]}
         />
       }
-      panel={currentPanel}
+      panel={
+        currentPanel === Panels.FileTree && (
+          <FileTree requestFileLoad={requestFileLoad} />
+        )
+      }
     />
   );
 };

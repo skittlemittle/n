@@ -20,7 +20,7 @@ interface PathEntry {
 interface RTreeProps {
   dirTree: PathEntry[];
   foldDir: foldDir;
-  fileClicked: (p: string) => void;
+  fileClicked: requestFileLoad;
   level: number;
   parentId: string;
 }
@@ -91,7 +91,7 @@ const RenderTree = ({
 };
 
 interface FTreeProps {
-  requestFileLoad: (p: string) => void;
+  requestFileLoad: requestFileLoad;
 }
 
 const FileTree = ({ requestFileLoad }: FTreeProps) => {
@@ -112,7 +112,7 @@ const FileTree = ({ requestFileLoad }: FTreeProps) => {
   }, []);
 
   /** folds and unfolds directories
-   * @param index: the items index in the file array eg: [0, 3]
+   * @param id: the id of the folder
    */
   const foldDir: foldDir = (id: string) => {
     let d = [...dirTree];
@@ -163,5 +163,7 @@ const makeEntry = (
 });
 
 type foldDir = (index: string) => void;
+type requestFileLoad = (path: string) => void;
 
 export default FileTree;
+export type { requestFileLoad };
