@@ -11,7 +11,9 @@ import ToolbarButton from "./ToolbarButton";
 interface PathEntry {
   path: string;
   name: string;
-  children: PathEntry[] | undefined;
+  id: string;
+  parentId: string;
+  hasChildren: boolean;
   showChildren: boolean;
 }
 
@@ -20,8 +22,7 @@ interface RTreeProps {
   foldDir: foldDir;
   fileClicked: (p: string) => void;
   level: number;
-  /** this things index in the PathEntry array */
-  entryIndex: number[];
+  parentId: string;
 }
 
 /** recursively renders stuff in a directory */
@@ -30,7 +31,7 @@ const RenderTree = ({
   foldDir,
   fileClicked,
   level,
-  entryIndex,
+  parentId,
 }: RTreeProps): JSX.Element => {
   const themeContext = useContext(ThemeContext);
 
@@ -44,41 +45,47 @@ const RenderTree = ({
 
   return (
     <div>
-      {dirTree.map((entry, i) => {
-        const name = entry.name || entry.path;
-        if (entry.children !== undefined) {
-          const eIndex = [...entryIndex, i];
+      {dirTree
+        .filter((e) => e.parentId === parentId)
+        .map((entry) => {
+          const name = entry.name || entry.path;
+          if (entry.hasChildren) {
+            return (
+              <div key={uuid()}>
+                <TextBox
+                  color={themeContext.colors.aqua}
+                  level={level}
+                  onClick={() => foldDir(entry.id)}
+                >
+                  <ToolbarButton
+                    iconUrl={arrow}
+                    action={() => {}}
+                    size={[8, 8]}
+                  />
+                  {name}
+                </TextBox>
+                {entry.showChildren && (
+                  <RenderTree
+                    dirTree={dirTree}
+                    foldDir={foldDir}
+                    fileClicked={fileClicked}
+                    level={level + 1}
+                    parentId={entry.id}
+                  />
+                )}
+              </div>
+            );
+          }
           return (
             <TextBox
-              color={themeContext.colors.aqua}
               level={level}
-              onClick={() => foldDir(eIndex)}
+              onClick={() => fileClicked(entry.path)}
               key={uuid()}
             >
-              <ToolbarButton iconUrl={arrow} action={() => {}} size={[8, 8]} />
               {name}
-              {entry.showChildren && (
-                <RenderTree
-                  dirTree={entry.children.map((f) => makeEntry(f))}
-                  foldDir={foldDir}
-                  fileClicked={fileClicked}
-                  level={level + 1}
-                  entryIndex={eIndex}
-                />
-              )}
             </TextBox>
           );
-        }
-        return (
-          <TextBox
-            level={level}
-            onClick={() => fileClicked(entry.path)}
-            key={uuid()}
-          >
-            {name}
-          </TextBox>
-        );
-      })}
+        })}
     </div>
   );
 };
@@ -89,11 +96,15 @@ interface FTreeProps {
 
 const FileTree = ({ requestFileLoad }: FTreeProps) => {
   const [dirTree, setDirTree] = useState<PathEntry[]>([]);
+  const rootId = "";
 
   useEffect(() => {
     let mounted = true;
     loadFolder("projects").then((f) => {
-      if (mounted) setDirTree(f.map((e) => makeEntry(e)));
+      if (mounted)
+        setDirTree(
+          f.map((e) => makeEntry(e, rootId, e.children !== undefined))
+        );
     });
     return () => {
       mounted = false;
@@ -103,24 +114,17 @@ const FileTree = ({ requestFileLoad }: FTreeProps) => {
   /** folds and unfolds directories
    * @param index: the items index in the file array eg: [0, 3]
    */
-  const foldDir: foldDir = (index: number[]) => {
-    const d = [...dirTree];
+  const foldDir: foldDir = (id: string) => {
+    let d = [...dirTree];
+    const index = d.findIndex((it) => it.id === id);
+    d[index].showChildren = !d[index].showChildren;
 
-    let entry: PathEntry = d[index[0]];
-    index.shift();
-    for (const i of index) {
-      if (entry.children !== undefined) entry = entry.children[i];
-      else {
-        console.warn(`FileWarn:  file entry ${i} has no children`);
-        break;
-      }
-    }
-    entry.showChildren = !entry.showChildren;
-    if (entry.showChildren) {
-      loadFolder(entry.path)
+    if (d[index].showChildren) {
+      d = d.filter((e) => e.parentId !== id); // potentially stale
+
+      loadFolder(d[index].path)
         .then((f) => {
-          entry.children = f.map((e) => makeEntry(e));
-          d[index[0]] = entry;
+          d.push(...f.map((e) => makeEntry(e, id, e.children !== undefined)));
           setDirTree(d);
         })
         .catch((e) => console.log(`FileError:   ${e}`));
@@ -138,23 +142,26 @@ const FileTree = ({ requestFileLoad }: FTreeProps) => {
         dirTree={dirTree}
         foldDir={foldDir}
         fileClicked={fileClicked}
-        entryIndex={[]}
         level={0}
+        parentId={rootId}
       />
     </ToolPanel>
   );
 };
 
-const makeEntry = (file: FileEntry): PathEntry => ({
+const makeEntry = (
+  file: FileEntry,
+  parentId: string,
+  hasChildren: boolean
+): PathEntry => ({
   path: file.path,
   name: file.name || file.path,
-  children:
-    file.children !== undefined
-      ? file.children.map((c) => makeEntry(c))
-      : undefined,
+  id: uuid(),
+  parentId,
+  hasChildren,
   showChildren: false,
 });
 
-type foldDir = (index: number[]) => void;
+type foldDir = (index: string) => void;
 
 export default FileTree;
