@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toolbar styles 1`] = `
+<div
+  className="sc-bdvvtL deXrXU"
+  dir="right"
+>
+  <button
+    className="sc-gsDKAQ gZZMCT"
+    onClick={[Function]}
+    resource="face.svg"
+  />
+</div>
+`;
