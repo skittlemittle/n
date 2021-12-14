@@ -6,22 +6,28 @@ import BufferGap from "../lib/bufferGap";
 import makeMarkList, { MarkList } from "../lib/mark";
 import Panel from "../lib/panel";
 import AppClipBoard from "../lib/clipBoard";
+import { loadFile } from "../fileOperations";
 
 interface SplitState {
   /** name of the active buffer */
-  currentBuffer: string;
+  currentBuffer: Buff;
   /** view of the current buffer */
   view: BufferView;
 }
 
-class SplitManager extends React.Component<{}, SplitState> {
+interface SplitProps {
+  /** path to the file to be loaded */
+  fileToLoad: string | null;
+}
+
+class SplitManager extends React.Component<SplitProps, SplitState> {
   private buffers: Map<string, Buff>;
   private panelState: Panel;
   /** vim mode (app level), mode is persisted across buffers */
   private lastMode: Mode;
   private clipBoard: AppClipBoard;
 
-  constructor(props: {}) {
+  constructor(props: SplitProps) {
     super(props);
     this.buffers = loadBuffers();
     this.panelState = new Panel();
@@ -31,37 +37,64 @@ class SplitManager extends React.Component<{}, SplitState> {
 
     const cBuff = this.panelState.getSelectedTab()[1];
     this.state = {
-      currentBuffer: cBuff,
+      currentBuffer: this.buffers.get(cBuff) || makeEmptyBuffer(),
       view: this.buffers.get(cBuff)?.view || "edit",
     };
   }
 
-  handleTabClick: tabClick = (index: number, close?: boolean) => {
+  componentDidUpdate(prevProps: SplitProps) {
+    const path = this.props.fileToLoad;
+
+    if (path && path !== prevProps.fileToLoad) {
+      if (!this.buffers.has(path)) {
+        makeBufferFromFile(path)
+          .then((file) => {
+            if (file !== null) {
+              this.buffers.set(path, file);
+              this.panelState.addTab(path);
+              const cBuff = this.buffers.get(
+                this.panelState.getSelectedTab()[1]
+              );
+              this.setState({
+                currentBuffer: cBuff || this.state.currentBuffer,
+                view: cBuff?.view === "edit" ? "rendered" : "edit", // dirty hack to get it to refresh
+              });
+            }
+          })
+          .catch((e) => console.log(`FileError  ${e}`));
+      } else {
+        this.panelState.selectTab(path);
+        this.setState({
+          currentBuffer: this.buffers.get(path) || this.state.currentBuffer,
+        });
+      }
+    }
+  }
+
+  private handleTabClick: tabClick = (index: number, close?: boolean) => {
     console.log(index, close);
   };
 
-  saveEditState = (point: number) => {
-    const b = this.buffers.get(this.state.currentBuffer);
-    if (b !== undefined) b.point = point;
+  private saveEditState = (point: number) => {
+    const b = { ...this.state.currentBuffer };
+    b.point = point;
+    this.setState({ currentBuffer: b });
   };
 
-  saveMode = (m: Mode) => {
+  private saveMode = (m: Mode) => {
     this.lastMode = m;
   };
 
   /** set the view and trigger a rerender */
-  toggleRendered = (t: boolean) => {
-    const b = this.buffers.get(this.state.currentBuffer);
-    if (b !== undefined) {
-      b.view = t ? "rendered" : "edit";
-      this.setState({ view: b.view });
-    }
+  private toggleRendered = (t: boolean) => {
+    const b = { ...this.state.currentBuffer };
+    b.view = t ? "rendered" : "edit";
+    console.log(b);
+    this.setState({ view: b.view, currentBuffer: b });
   };
 
   render() {
-    let buffer = this.buffers.get(this.state.currentBuffer);
-    buffer = buffer === undefined ? makeEmptyBuffer() : buffer;
-
+    const buffer = this.state.currentBuffer;
     return (
       <TextPanel
         tabs={this.panelState.getTabs()}
@@ -69,7 +102,7 @@ class SplitManager extends React.Component<{}, SplitState> {
         active={true}
         onClick={this.handleTabClick}
       >
-        {(buffer.view === "edit" && (
+        {(this.state.view === "edit" && (
           <BufferContainer
             bufferGap={buffer.bufferGap}
             initPoint={buffer.point}
@@ -108,6 +141,17 @@ function makeEmptyBuffer(): Buff {
     bufferGap: new BufferGap(),
     view: "edit",
   };
+}
+
+/** loads a file into a buffergap
+ * @param path: path to the file
+ * @return a buffergap with the contents of the file in it
+ */
+async function makeBufferFromFile(path: string): Promise<Buff> {
+  const contents = await loadFile(path);
+  const b = makeEmptyBuffer();
+  b.bufferGap.insert(contents, 0);
+  return b;
 }
 
 // TODO: stub

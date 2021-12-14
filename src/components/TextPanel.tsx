@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
+import nameFromPath from "../lib/nameFromPath";
 import Cross from "./styles/crossButton";
 
 const TabRibbon = styled.div`
@@ -48,7 +49,8 @@ interface props {
 const TextPanel = (props: props) => (
   <PanelBox>
     <TabRibbon>
-      {props.tabs.map((title, i) => {
+      {props.tabs.map((t, i) => {
+        const title = nameFromPath(t);
         if (i === props.selectedTab) {
           return (
             <HlTab key={i} onClick={() => props.onClick(i)}>
