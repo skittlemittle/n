@@ -8,6 +8,7 @@ import ToolPanel, { TextBox } from "./styles/ToolPanel";
 import arrow from "../assets/icons/arrow.svg";
 import ToolbarButton from "./ToolbarButton";
 
+/** file / folder entry type */
 interface PathEntry {
   path: string;
   name: string;
@@ -16,6 +17,22 @@ interface PathEntry {
   hasChildren: boolean;
   showChildren: boolean;
 }
+
+interface FboxProps {
+  name: string;
+  level: number;
+  onClick: () => void;
+}
+
+const FolderTextBox = ({ name, level, onClick }: FboxProps) => {
+  const themeContext = useContext(ThemeContext);
+  return (
+    <TextBox color={themeContext.colors.aqua} level={level} onClick={onClick}>
+      <ToolbarButton iconUrl={arrow} action={() => {}} size={[8, 8]} />
+      {name}
+    </TextBox>
+  );
+};
 
 interface RTreeProps {
   dirTree: PathEntry[];
@@ -52,18 +69,11 @@ const RenderTree = ({
           if (entry.hasChildren) {
             return (
               <div key={uuid()}>
-                <TextBox
-                  color={themeContext.colors.aqua}
+                <FolderTextBox
+                  name={name}
                   level={level}
                   onClick={() => foldDir(entry.id)}
-                >
-                  <ToolbarButton
-                    iconUrl={arrow}
-                    action={() => {}}
-                    size={[8, 8]}
-                  />
-                  {name}
-                </TextBox>
+                />
                 {entry.showChildren && (
                   <RenderTree
                     dirTree={dirTree}
@@ -92,15 +102,16 @@ const RenderTree = ({
 
 interface FTreeProps {
   requestFileLoad: requestFileLoad;
+  rootDirectory: string;
 }
 
-const FileTree = ({ requestFileLoad }: FTreeProps) => {
+const FileTree = ({ requestFileLoad, rootDirectory }: FTreeProps) => {
   const [dirTree, setDirTree] = useState<PathEntry[]>([]);
   const rootId = "";
 
   useEffect(() => {
     let mounted = true;
-    loadFolder("projects").then((f) => {
+    loadFolder(rootDirectory).then((f) => {
       if (mounted)
         setDirTree(
           f.map((e) => makeEntry(e, rootId, e.children !== undefined))
@@ -109,7 +120,7 @@ const FileTree = ({ requestFileLoad }: FTreeProps) => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [rootDirectory]);
 
   /** folds and unfolds directories
    * @param id: the id of the folder
