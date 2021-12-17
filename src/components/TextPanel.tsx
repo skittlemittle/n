@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
 import nameFromPath from "../lib/nameFromPath";
+import NoFile from "./NoFile";
 import Cross from "./styles/crossButton";
 
 const TabRibbon = styled.div`
@@ -53,24 +54,25 @@ const TextPanel = (props: props) => (
         const title = nameFromPath(t);
         if (i === props.selectedTab) {
           return (
-            <HlTab key={i} onClick={() => props.onClick(i)}>
+            <HlTab key={i} onClick={() => props.onClick(t)}>
               {title}
-              <Cross onClick={() => props.onClick(i, true)} />
+              <Cross onClick={() => props.onClick(t, true)} />
             </HlTab>
           );
         }
         return (
-          <Tab key={i} onClick={() => props.onClick(i)}>
+          <Tab key={i} onClick={() => props.onClick(t)}>
             {title}
           </Tab>
         );
       })}
     </TabRibbon>
-    {props.children}
+    {(props.tabs.length > 0 && props.children) || <NoFile />}
   </PanelBox>
 );
 
-type tabClick = (index: number, close?: boolean) => void;
+type tabClick = (key: string, close?: boolean) => void;
 
 export default TextPanel;
+export { PanelBox };
 export type { tabClick };

@@ -38,7 +38,7 @@ class SplitManager extends React.Component<SplitProps, SplitState> {
     const cBuff = this.panelState.getSelectedTab()[1];
     this.state = {
       currentBuffer: this.buffers.get(cBuff) || makeEmptyBuffer(),
-      view: this.buffers.get(cBuff)?.view || "edit",
+      view: this.buffers.get(cBuff)?.view || "rendered",
     };
   }
 
@@ -71,8 +71,20 @@ class SplitManager extends React.Component<SplitProps, SplitState> {
     }
   }
 
-  private handleTabClick: tabClick = (index: number, close?: boolean) => {
-    console.log(index, close);
+  private handleTabClick: tabClick = (path: string, close?: boolean) => {
+    let selected = path;
+    if (close) {
+      this.buffers.delete(path);
+      this.panelState.closeTab(path);
+      selected = this.panelState.getSelectedTab()[1];
+    } else {
+      this.panelState.selectTab(path);
+    }
+    const cBuff = this.buffers.get(selected) || makeEmptyBuffer();
+    this.setState({
+      currentBuffer: cBuff,
+      view: cBuff?.view === "edit" ? "rendered" : "edit", // dirty hack to get it to refresh
+    });
   };
 
   private saveEditState = (point: number) => {
