@@ -32,11 +32,10 @@ class Panel {
       if (this.tabs.length > 1) {
         if (this.selectedTab === this.tabs.length - 1)
           this.selectedTab = this.selectedTab - 1;
-        else this.selectedTab = this.selectedTab + 1;
       } else {
         this.selectedTab = -1;
       }
-    }
+    } else if (i < this.selectedTab) this.selectedTab--;
 
     this.tabs.splice(i, 1);
     return true;
