@@ -6,7 +6,7 @@ import BufferGap from "../lib/bufferGap";
 import makeMarkList, { MarkList } from "../lib/mark";
 import Panel from "../lib/panel";
 import AppClipBoard from "../lib/clipBoard";
-import { loadFile } from "../fileOperations";
+import { loadFile, saveFile } from "../fileOperations";
 
 interface SplitState {
   /** name of the active buffer */
@@ -87,10 +87,16 @@ class SplitManager extends React.Component<SplitProps, SplitState> {
     });
   };
 
-  private saveEditState = (point: number) => {
+  private saveBuffer = (point: number, write: boolean) => {
     const b = { ...this.state.currentBuffer };
     b.point = point;
     this.setState({ currentBuffer: b });
+    if (write) {
+      saveFile(
+        this.panelState.getSelectedTab()[1],
+        b.bufferGap.getContents()
+      ).catch((e) => console.log(`FileError:   ${e}`));
+    }
   };
 
   private saveMode = (m: Mode) => {
@@ -101,7 +107,6 @@ class SplitManager extends React.Component<SplitProps, SplitState> {
   private toggleRendered = (t: boolean) => {
     const b = { ...this.state.currentBuffer };
     b.view = t ? "rendered" : "edit";
-    console.log(b);
     this.setState({ view: b.view, currentBuffer: b });
   };
 
@@ -118,7 +123,7 @@ class SplitManager extends React.Component<SplitProps, SplitState> {
           <BufferContainer
             bufferGap={buffer.bufferGap}
             initPoint={buffer.point}
-            save={this.saveEditState}
+            save={this.saveBuffer}
             initMode={this.lastMode}
             clipBoard={this.clipBoard}
             marks={buffer.visualMarkers}
