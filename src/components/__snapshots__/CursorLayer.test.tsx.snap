@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cursor block 1`] = `
+<div
+  id="gaming"
+>
+  <div
+    className="sc-bdvvtL laJtQv"
+    hidden={true}
+    style={
+      Object {
+        "left": 300,
+        "top": 300,
+      }
+    }
+  />
+</div>
+`;
+
+exports[`cursor line 1`] = `
+<div
+  id="gaming"
+>
+  <div
+    className="sc-bdvvtL knxTwh"
+    hidden={true}
+    style={
+      Object {
+        "left": 300,
+        "top": 300,
+      }
+    }
+  />
+</div>
+`;

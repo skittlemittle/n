@@ -10,6 +10,7 @@ import {
 import { MarkList } from "../lib/mark";
 import AppClipBoard from "../lib/clipBoard";
 import { toggleRendred } from "./SplitManager";
+import { CommandBuffer, commands, makeCommand } from "../lib/commands";
 
 enum Mode {
   Normal,
@@ -28,7 +29,11 @@ interface State {
 interface Props {
   bufferGap: BufferGap;
   initPoint: number;
-  save: (point: number) => void;
+  /** save the editors state / the file
+   * @param point: location of point
+   * @param write: if true the file is written
+   */
+  save: (point: number, write: boolean) => void;
   initMode: Mode;
   clipBoard: AppClipBoard;
   marks: MarkList;
@@ -51,6 +56,8 @@ class BufferContainer extends React.Component<Props, State> {
   private marks: MarkList;
   private KeventIDs: number[];
   private visMarks: VisualMarks;
+  private commandRepeat: string;
+  private commandBuffer: CommandBuffer;
 
   constructor(props: Props) {
     super(props);
@@ -63,6 +70,8 @@ class BufferContainer extends React.Component<Props, State> {
       lineStart: "",
       lineEnd: "",
     };
+    this.commandRepeat = "";
+    this.commandBuffer = makeCommand();
 
     this.state = {
       text: this.bufferGap.getContents(),
@@ -88,7 +97,7 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.props.save(this.state.point);
+    this.props.save(this.state.point, true); // crude autosave
     this.KeventIDs.forEach((k) => KeyboardEvents.removeListener(k));
   }
 
@@ -119,18 +128,37 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   private handleSingleKeyPress = (e: KeyboardEvent, keys: string) => {
+    // commands outside insert mode
+    if (this.state.mode !== Mode.Insert) {
+      // repeats / 0 home
+      if (!isNaN(parseInt(e.key))) {
+        const head = parseInt(this.commandRepeat[0]);
+        if (head >= 1 || (isNaN(head) && parseInt(e.key) !== 0)) {
+          this.commandRepeat = this.commandRepeat.concat(e.key);
+        } else if (parseInt(e.key) === 0) {
+          this.setState({
+            point:
+              this.state.point -
+              this.distanceToNewLine(this.state.point, false),
+          });
+        }
+        return;
+      } else this.commandRepeat = "";
+      const repeat = parseInt(this.commandRepeat) || 1;
+
+      let command: string[];
+      if (this.commandBuffer.push(e.key)) {
+        if (commands.enders.includes(e.key)) {
+          command = this.commandBuffer.flush();
+        }
+      } else this.commandBuffer.flush();
+    }
     switch (e.key) {
       case "End":
-        this.setState({
-          point:
-            this.state.point + this.distanceToNewLine(this.state.point, true),
-        });
+        this.gotoEOL();
         break;
       case "Home":
-        this.setState({
-          point:
-            this.state.point - this.distanceToNewLine(this.state.point, false),
-        });
+        this.gotoLineStart();
         break;
       case "ArrowLeft":
         this.setState({ point: this.decrementPoint(1) });
@@ -157,6 +185,7 @@ class BufferContainer extends React.Component<Props, State> {
           this.state.mode === Mode.Visual_Block
         )
           this.visual(e, keys);
+        this.commandRepeat = "";
         break;
     }
     this.setState({ text: this.bufferGap.getContents() });
@@ -182,6 +211,7 @@ class BufferContainer extends React.Component<Props, State> {
     if (renderBuffer) {
       this.props.toggleRendered(true);
     }
+    this.commandRepeat = "";
   };
 
   private insert(e: KeyboardEvent, keys?: string) {
@@ -213,26 +243,17 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   private normal(e: KeyboardEvent, keys?: string) {
-    let comboHappened = false;
-    switch (keys) {
-      case "Shift,V":
-        this.setState({ mode: Mode.Visual_Line });
-        comboHappened = true;
-        break;
-      case "Control,v":
-        this.setState({ mode: Mode.Visual_Block });
-        comboHappened = true;
-        break;
-      default:
-        break;
-    }
-    if (comboHappened) return;
     switch (e.key) {
       case "i":
         this.setState({ mode: Mode.Insert });
         break;
       case "v":
         this.setState({ mode: Mode.Visual });
+        break;
+      case "o":
+        this.setState({ mode: Mode.Insert });
+        this.bufferGap.insert("\n", this.state.point);
+        this.setState({ point: this.state.point + 1 });
         break;
       default:
         break;
@@ -280,7 +301,7 @@ class BufferContainer extends React.Component<Props, State> {
 
   //============ commands ====================================================
   /** yank text in a region
-   * @param start: location to start deleting from
+   * @param start: location to start copying from
    * @param end: location to end on
    */
   private yank = (start: number, end: number) => {
@@ -296,6 +317,21 @@ class BufferContainer extends React.Component<Props, State> {
     this.yank(start, end);
     this.bufferGap.delete(true, end - start, start);
     this.setState({ point: start });
+  };
+
+  /** execute a vim command
+   * @param command: a string array of the words in the command; eg 5dj is ["5", "d", "j"]
+   */
+  private executeCommand = (command: string[]) => {
+    let commandRepeat = "";
+    command.forEach((word) => {
+      if (!isNaN(parseInt(word))) {
+        const head = parseInt(commandRepeat[0]);
+        if (head >= 1 || (isNaN(head) && parseInt(word) !== 0)) {
+          commandRepeat = commandRepeat.concat(word);
+        }
+      }
+    });
   };
 
   //============ helpers====================================================
@@ -365,7 +401,10 @@ class BufferContainer extends React.Component<Props, State> {
     return distance;
   }
 
-  private movePointUp() {
+  /** move the point up one line, to the same column if it can
+   * @param repeat: how many lines up to go, positive int
+   */
+  private movePointUp(repeat = 1) {
     // go two newlines up then add till at target col or at line end.
     let p = this.state.point;
     const d1 = this.distanceToNewLine(p, false);
@@ -376,9 +415,13 @@ class BufferContainer extends React.Component<Props, State> {
       p += Math.min(d2, d1);
       this.setState({ point: p });
     }
+    if (repeat > 1) this.movePointUp(repeat - 1);
   }
 
-  private movePointDown() {
+  /** move the point down one line, to the same column if it can
+   * @param repeat: how many lines down to go, positive int
+   */
+  private movePointDown(repeat = 1) {
     let p = this.state.point;
     const column = this.distanceToNewLine(p, false);
     const nextN = this.distanceToNewLine(p, true);
@@ -391,6 +434,7 @@ class BufferContainer extends React.Component<Props, State> {
       p += nextN + 1 + newColumn;
     }
     if (p <= this.state.text.length) this.setState({ point: p });
+    if (repeat > 1) this.movePointDown(repeat - 1);
   }
 
   /** returns the name of the furthest mark from a point */
@@ -412,7 +456,7 @@ class BufferContainer extends React.Component<Props, State> {
   };
 
   /** choose the point and mark to operate on for the visual modes
-   * @return {point, mark} the point and mark
+   * @return: {point, mark} the point and mark
    */
   private chooseVisualRegion = () => {
     const p = this.state.point;
@@ -438,6 +482,18 @@ class BufferContainer extends React.Component<Props, State> {
       ]);
     }
     return { point, mark };
+  };
+
+  private gotoEOL = () => {
+    this.setState({
+      point: this.state.point - this.distanceToNewLine(this.state.point, false),
+    });
+  };
+
+  private gotoLineStart = () => {
+    this.setState({
+      point: this.state.point - this.distanceToNewLine(this.state.point, false),
+    });
   };
 }
 

@@ -1,8 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+
 import { Mode } from "./BufferContainer";
 import StatusLine, { StatusMode } from "./StatusLine";
-import BufferPanel from "./styles/BufferPanel";
+import BufferPanel, { ScrollBox } from "./styles/BufferPanel";
+import CursorLayer from "./CursorLayer";
 
 /** Cope💅 */
 const editorSettings = {
@@ -10,74 +11,6 @@ const editorSettings = {
   fontWidth: 9.62,
   lineHeight: 19,
 };
-
-const Cursor = styled.div.attrs((props: { block: boolean }) => ({
-  block: props.block,
-}))`
-  height: ${editorSettings.lineHeight}px;
-  width: ${(props) => (props.block ? editorSettings.fontWidth + "px" : "2px")};
-  position: absolute;
-  visibility: ${(props) => (props.hidden ? "hiddin" : "visible")};
-  background: ${(props) =>
-    props.block ? props.theme.colors.orange_l : props.theme.colors.fg1};
-  opacity: ${(props) => (props.block ? 0.45 : 1)};
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-`;
-
-interface CursorState {
-  shown: boolean;
-}
-
-interface CursorProps {
-  position: { row: number; column: number };
-  block: boolean;
-  /** id of parent buffer */
-  parent: string;
-}
-
-/** Renders a text cursor */
-class CursorLayer extends React.Component<CursorProps, CursorState> {
-  private blinky: any; // not a word about this
-  constructor(props: CursorProps) {
-    super(props);
-    this.state = { shown: true };
-  }
-
-  componentDidMount() {
-    this.blinky = setInterval(() => {
-      const s = this.state.shown;
-      this.setState({ shown: !s });
-    }, 400);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.blinky);
-  }
-
-  render() {
-    const offsets = document
-      .getElementById(this.props.parent)
-      ?.getBoundingClientRect();
-    let top = 0;
-    let left = 0;
-    if (offsets) {
-      top = offsets.top;
-      left = offsets.left;
-    }
-    return (
-      <Cursor
-        hidden={this.state.shown}
-        block={this.props.block}
-        style={{
-          top: top + this.props.position.row * editorSettings.lineHeight,
-          left: left + this.props.position.column * editorSettings.fontWidth,
-        }}
-      ></Cursor>
-    );
-  }
-}
 
 function status(mode: Mode, left: string[], right: string[]) {
   let m: StatusMode = "normal";
@@ -121,27 +54,36 @@ class Buffer extends React.Component<BufferProps, {}> {
 
     return (
       <>
-        <BufferPanel id={"buffer-panel-0"} onPaste={this.props.onPaste}>
-          {this.props.text.split("\n").map((line, i) => {
-            if (shoveCursor && column - line.length > 0) {
-              column -= line.length + 1;
-              row++;
-            } else {
-              shoveCursor = false;
-            }
-            return (
-              <div key={i} style={{ height: editorSettings.lineHeight }}>
-                {line}
-              </div>
-            );
-          })}
+        <ScrollBox>
+          <BufferPanel id={"buffer-panel-0"} onPaste={this.props.onPaste}>
+            {this.props.text.split("\n").map((line, i) => {
+              if (shoveCursor && column - line.length > 0) {
+                column -= line.length + 1;
+                row++;
+              } else {
+                shoveCursor = false;
+              }
+              return (
+                <div key={i} style={{ height: editorSettings.lineHeight }}>
+                  {line}
+                </div>
+              );
+            })}
 
-          <CursorLayer
-            position={{ row, column }}
-            parent={"buffer-panel-0"}
-            block={this.props.mode !== Mode.Insert}
-          />
-        </BufferPanel>
+            <CursorLayer
+              position={{
+                row: row * editorSettings.lineHeight,
+                column: column * editorSettings.fontWidth,
+              }}
+              size={{
+                height: editorSettings.lineHeight,
+                width: editorSettings.fontWidth,
+              }}
+              parent={"buffer-panel-0"}
+              block={this.props.mode !== Mode.Insert}
+            />
+          </BufferPanel>
+        </ScrollBox>
 
         {status(
           this.props.mode,
