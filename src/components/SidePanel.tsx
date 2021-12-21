@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 
 import Toolbar from "./Toolbar";
-import face from "../assets/icons/face.svg";
+import file from "../assets/icons/file.svg";
 import FileTree, { requestFileLoad } from "./FileTree";
 
 const PanelBox = styled.div`
@@ -51,7 +51,7 @@ const SidePanel = ({ requestFileLoad }: panelProps) => {
         <Toolbar
           dir={"right"}
           buttons={[
-            { icon: face, action: () => handleToolClick(Panels.FileTree) },
+            { icon: file, action: () => handleToolClick(Panels.FileTree) },
           ]}
         />
       }
