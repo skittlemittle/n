@@ -11,6 +11,7 @@ interface CursorProps {
   block: boolean;
   /** id of parent buffer */
   parent: string;
+  forwardedRef: React.RefObject<HTMLDivElement>;
 }
 
 /** Renders a text cursor */
@@ -44,7 +45,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
     }
     return (
       <Cursor
-        hidden={this.state.shown}
+        dissapear={this.state.shown}
         block={this.props.block}
         h={this.props.size.height}
         w={this.props.size.width}
@@ -52,6 +53,7 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
           top: top + this.props.position.row,
           left: left + this.props.position.column,
         }}
+        ref={this.props.forwardedRef}
       ></Cursor>
     );
   }

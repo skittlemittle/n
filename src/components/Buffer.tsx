@@ -2,8 +2,9 @@ import React from "react";
 
 import { Mode } from "./BufferContainer";
 import StatusLine, { StatusMode } from "./StatusLine";
-import BufferPanel, { ScrollBox } from "./styles/BufferPanel";
+import BufferPanel from "./styles/BufferPanel";
 import CursorLayer from "./CursorLayer";
+import TextScroller from "./TextScroller";
 
 /** Cope💅 */
 const editorSettings = {
@@ -39,6 +40,8 @@ function status(mode: Mode, left: string[], right: string[]) {
   );
 }
 
+const percent = (x: number, y: number) => Math.round((x / y) * 100) || 0;
+
 interface BufferProps {
   text: string;
   point: number;
@@ -47,6 +50,13 @@ interface BufferProps {
 }
 
 class Buffer extends React.Component<BufferProps, {}> {
+  private cursorRef;
+
+  constructor(props: BufferProps) {
+    super(props);
+    this.cursorRef = React.createRef<HTMLDivElement>();
+  }
+
   render() {
     let column = this.props.point;
     let row = 0;
@@ -54,7 +64,7 @@ class Buffer extends React.Component<BufferProps, {}> {
 
     return (
       <>
-        <ScrollBox>
+        <TextScroller target={this.cursorRef}>
           <BufferPanel id={"buffer-panel-0"} onPaste={this.props.onPaste}>
             {this.props.text.split("\n").map((line, i) => {
               if (shoveCursor && column - line.length > 0) {
@@ -81,17 +91,18 @@ class Buffer extends React.Component<BufferProps, {}> {
               }}
               parent={"buffer-panel-0"}
               block={this.props.mode !== Mode.Insert}
+              forwardedRef={this.cursorRef}
             />
           </BufferPanel>
-        </ScrollBox>
-
+        </TextScroller>
         {status(
           this.props.mode,
           ["owo"],
           [
-            `${
-              Math.round((this.props.point / this.props.text.length) * 100) || 0
-            }% ${row}: ${column}`,
+            `${percent(
+              this.props.point,
+              this.props.text.length
+            )}% ${row}: ${column}`,
           ]
         )}
       </>
