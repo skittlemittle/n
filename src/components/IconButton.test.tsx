@@ -1,10 +1,10 @@
 import renderer from "react-test-renderer";
-import ToolbarButton from "./ToolbarButton";
+import IconButton from "./IconButton";
 import face from "../assets/icons/face.svg";
 
 it("ToolbarButton renders", () => {
   const tree = renderer
-    .create(<ToolbarButton iconUrl={face} action={() => {}} />)
+    .create(<IconButton iconUrl={face} action={() => {}} />)
     .toJSON();
   expect(tree).toMatchSnapshot();
 });

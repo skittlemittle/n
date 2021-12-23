@@ -1,5 +1,5 @@
 import Ribbon from "./styles/Ribbon";
-import ToolbarButton from "./ToolbarButton";
+import IconButton from "./IconButton";
 
 interface props {
   buttons: { icon: string; action: () => void }[];
@@ -10,7 +10,7 @@ const Toolbar = ({ buttons, dir }: props) => {
   return (
     <Ribbon dir={dir}>
       {buttons.map((b, i) => (
-        <ToolbarButton iconUrl={b.icon} action={b.action} key={i} />
+        <IconButton iconUrl={b.icon} action={b.action} key={i} />
       ))}
     </Ribbon>
   );

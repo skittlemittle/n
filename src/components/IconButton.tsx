@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Tbutton = styled.button.attrs((props: { h?: number; w?: number }) => ({
+const ImgButton = styled.button.attrs((props: { h?: number; w?: number }) => ({
   h: props.h,
   w: props.w,
 }))`
@@ -22,14 +22,14 @@ interface props {
   size?: [number, number];
 }
 
-/** image button */
-const ToolbarButton = ({ iconUrl, action, size }: props) => {
+/** image button with transparent background */
+const IconButton = ({ iconUrl, action, size }: props) => {
   if (size && size.length === 2)
     return (
-      <Tbutton onClick={action} resource={iconUrl} w={size[0]} h={size[1]} />
+      <ImgButton onClick={action} resource={iconUrl} w={size[0]} h={size[1]} />
     );
 
-  return <Tbutton onClick={action} resource={iconUrl} />;
+  return <ImgButton onClick={action} resource={iconUrl} />;
 };
 
-export default ToolbarButton;
+export default IconButton;

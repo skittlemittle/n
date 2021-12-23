@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { loadFolder } from "../fileOperations";
 import ToolPanel, { TextBox } from "./styles/ToolPanel";
 import arrow from "../assets/icons/arrow.svg";
-import ToolbarButton from "./ToolbarButton";
+import IconButton from "./IconButton";
 
 /** file / folder entry type */
 interface PathEntry {
@@ -28,7 +28,7 @@ const FolderTextBox = ({ name, level, onClick }: FboxProps) => {
   const themeContext = useContext(ThemeContext);
   return (
     <TextBox color={themeContext.colors.aqua} level={level} onClick={onClick}>
-      <ToolbarButton iconUrl={arrow} action={() => {}} size={[8, 8]} />
+      <IconButton iconUrl={arrow} action={() => {}} size={[8, 8]} />
       {name}
     </TextBox>
   );
