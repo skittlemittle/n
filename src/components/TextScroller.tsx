@@ -14,15 +14,11 @@ const TextScroller = (props: props) => {
   useEffect(() => {
     if (props.target.current && scrollboxRef.current) {
       const offset = props.target.current.getBoundingClientRect().top;
-      const h = props.target.current.clientHeight;
       const scroll = scrollboxRef.current.scrollTop;
-      if (offset > scroll || offset < 0) {
-        scrollboxRef.current.scrollTo({
-          top: offset + h,
-          behavior: "smooth",
-        });
-      }
-      console.log(`o ${offset}    s ${scroll}`);
+      scrollboxRef.current.scrollTo({
+        top: offset + scroll,
+        behavior: "smooth",
+      });
     }
   });
 
