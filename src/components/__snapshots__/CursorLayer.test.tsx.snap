@@ -5,8 +5,7 @@ exports[`cursor block 1`] = `
   id="gaming"
 >
   <div
-    className="sc-bdvvtL laJtQv"
-    hidden={true}
+    className="sc-bdvvtL gPuioP"
     style={
       Object {
         "left": 300,
@@ -22,8 +21,7 @@ exports[`cursor line 1`] = `
   id="gaming"
 >
   <div
-    className="sc-bdvvtL knxTwh"
-    hidden={true}
+    className="sc-bdvvtL eeKqGd"
     style={
       Object {
         "left": 300,

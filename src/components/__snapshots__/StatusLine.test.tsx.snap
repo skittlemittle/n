@@ -2,7 +2,7 @@
 
 exports[`insert colors 1`] = `
 <div
-  className="sc-eCImPb jVbEjO"
+  className="sc-hKwDye bDPwjS"
 >
   <div
     style={
@@ -13,13 +13,8 @@ exports[`insert colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#076678",
-          "color": "#fbf1c7",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk hjGvrY"
+      dir="left"
     >
       INSERT
     </div>
@@ -38,13 +33,8 @@ exports[`insert colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#d5c4a1",
-          "color": "#7c6f64",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk drgQRY"
+      dir="left"
     >
       some file
     </div>
@@ -63,13 +53,8 @@ exports[`insert colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#d5c4a1",
-          "color": "#3c3836",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk iXDobc"
+      dir="left"
     >
       8?
     </div>
@@ -80,7 +65,7 @@ exports[`insert colors 1`] = `
     />
   </div>
   <div
-    className="sc-jRQBWg dKNDhz"
+    className="sc-eCImPb iaLjNI"
   >
     <div
       style={
@@ -96,13 +81,8 @@ exports[`insert colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#076678",
-            "color": "#fbf1c7",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk edMYak"
+        dir="right"
       >
         3% : 3/300
       </div>
@@ -121,13 +101,8 @@ exports[`insert colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#d5c4a1",
-            "color": "#7c6f64",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk hCHYao"
+        dir="right"
       >
         hah
       </div>
@@ -146,13 +121,8 @@ exports[`insert colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#d5c4a1",
-            "color": "#3c3836",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk fkdtWg"
+        dir="right"
       >
         hheh
       </div>
@@ -163,7 +133,7 @@ exports[`insert colors 1`] = `
 
 exports[`normal colors 1`] = `
 <div
-  className="sc-eCImPb cBmgrh"
+  className="sc-hKwDye hlksiN"
 >
   <div
     style={
@@ -174,13 +144,8 @@ exports[`normal colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#7c6f64",
-          "color": "#fbf1c7",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk cSLGga"
+      dir="left"
     >
       NORMAL
     </div>
@@ -199,13 +164,8 @@ exports[`normal colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#d5c4a1",
-          "color": "#3c3836",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk iXDobc"
+      dir="left"
     >
       hm
     </div>
@@ -224,13 +184,8 @@ exports[`normal colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#ebdbb2",
-          "color": "#3c3836",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk cviyfT"
+      dir="left"
     >
       3
     </div>
@@ -241,7 +196,7 @@ exports[`normal colors 1`] = `
     />
   </div>
   <div
-    className="sc-jRQBWg dKNDhz"
+    className="sc-eCImPb iaLjNI"
   >
     <div
       style={
@@ -257,13 +212,8 @@ exports[`normal colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#7c6f64",
-            "color": "#fbf1c7",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk gNWHXG"
+        dir="right"
       >
         3% : 3/300
       </div>
@@ -282,13 +232,8 @@ exports[`normal colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#d5c4a1",
-            "color": "#3c3836",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk fkdtWg"
+        dir="right"
       >
         ae
       </div>
@@ -307,13 +252,8 @@ exports[`normal colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#ebdbb2",
-            "color": "#3c3836",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk dPiJWH"
+        dir="right"
       >
         r
       </div>
@@ -324,7 +264,7 @@ exports[`normal colors 1`] = `
 
 exports[`rendered colors 1`] = `
 <div
-  className="sc-eCImPb jVbEjO"
+  className="sc-hKwDye bDPwjS"
 >
   <div
     style={
@@ -335,13 +275,8 @@ exports[`rendered colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#8f3f71",
-          "color": "#fbf1c7",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk cpVntN"
+      dir="left"
     >
       RENDERED
     </div>
@@ -352,7 +287,7 @@ exports[`rendered colors 1`] = `
     />
   </div>
   <div
-    className="sc-jRQBWg dKNDhz"
+    className="sc-eCImPb iaLjNI"
   >
     <div
       style={
@@ -368,13 +303,8 @@ exports[`rendered colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#8f3f71",
-            "color": "#fbf1c7",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk ibfvOF"
+        dir="right"
       >
         3% : 3/300
       </div>
@@ -385,7 +315,7 @@ exports[`rendered colors 1`] = `
 
 exports[`visual colors 1`] = `
 <div
-  className="sc-eCImPb ytVIN"
+  className="sc-hKwDye loAIBN"
 >
   <div
     style={
@@ -396,13 +326,8 @@ exports[`visual colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#af3a03",
-          "color": "#fbf1c7",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk iBcGEW"
+      dir="left"
     >
       V_BLOCK
     </div>
@@ -421,13 +346,8 @@ exports[`visual colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#d5c4a1",
-          "color": "#3c3836",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk iXDobc"
+      dir="left"
     >
       owo
     </div>
@@ -446,13 +366,8 @@ exports[`visual colors 1`] = `
     }
   >
     <div
-      className="sc-gsDKAQ sc-dkPtRN gxEtIK XIEMA"
-      style={
-        Object {
-          "backgroundColor": "#a89984",
-          "color": "#fbf1c7",
-        }
-      }
+      className="sc-gsDKAQ sc-dkPtRN ktNGwk eSLkxa"
+      dir="left"
     >
       3
     </div>
@@ -463,7 +378,7 @@ exports[`visual colors 1`] = `
     />
   </div>
   <div
-    className="sc-jRQBWg dKNDhz"
+    className="sc-eCImPb iaLjNI"
   >
     <div
       style={
@@ -479,13 +394,8 @@ exports[`visual colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#af3a03",
-            "color": "#fbf1c7",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk gCEJlO"
+        dir="right"
       >
         3% : 3/300
       </div>
@@ -504,13 +414,8 @@ exports[`visual colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#d5c4a1",
-            "color": "#3c3836",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk fkdtWg"
+        dir="right"
       >
         ae
       </div>
@@ -529,13 +434,8 @@ exports[`visual colors 1`] = `
         dir="right"
       />
       <div
-        className="sc-gsDKAQ sc-hKwDye gxEtIK krXsrv"
-        style={
-          Object {
-            "backgroundColor": "#a89984",
-            "color": "#fbf1c7",
-          }
-        }
+        className="sc-gsDKAQ sc-dkPtRN ktNGwk einxge"
+        dir="right"
       >
         r
       </div>

@@ -6,7 +6,7 @@ exports[`toolbar styles 1`] = `
   dir="right"
 >
   <button
-    className="sc-gsDKAQ gZZMCT"
+    className="sc-gsDKAQ jwvJvV"
     onClick={[Function]}
     resource="face.svg"
   />
