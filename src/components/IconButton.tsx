@@ -13,6 +13,20 @@ const ImgButton = styled.button.attrs((props: { h?: number; w?: number }) => ({
   background-repeat: no-repeat;
   margin: none;
   padding: 0px;
+
+  &:hover {
+    background: ${(props) => props.theme.colors.bg1};
+    background-image: url(${(props) => props.resource});
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  &:active {
+    background: ${(props) => props.theme.colors.bg2};
+    background-image: url(${(props) => props.resource});
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
 `;
 
 interface props {

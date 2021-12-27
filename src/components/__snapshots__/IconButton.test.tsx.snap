@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToolbarButton renders 1`] = `
+<button
+  className="sc-bdvvtL DvRgo"
+  onClick={[Function]}
+  resource="face.svg"
+/>
+`;
