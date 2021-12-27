@@ -1,5 +1,22 @@
 import Rendered from "./Rendered";
 
-const NoFile = () => <Rendered text={"No File."} toggleRendered={() => {}} />;
+const text =
+  "\
+```\n \
+                 ▒█████   █     █░ ▒█████  \n \
+                ▒██▒  ██▒▓█░ █ ░█░▒██▒  ██▒\n \
+                ▒██░  ██▒▒█░ █ ░█ ▒██░  ██▒\n \
+                ▒██   ██░░█░ █ ░█ ▒██   ██░\n \
+                ░ ████▓▒░░░██▒██▓ ░ ████▓▒░\n \
+                ░ ▒░▒░▒░ ░ ▓░▒ ▒  ░ ▒░▒░▒░ \n \
+                  ░ ▒ ▒░   ▒ ░ ░    ░ ▒ ▒░ \n \
+                ░ ░ ░ ▒    ░   ░  ░ ░ ░ ▒  \n \
+                    ░ ░      ░        ░ ░\n \
+```\n \
+\n \
+\n \
+**Toggle render:** Ctrl + Shift + m\n";
+
+const NoFile = () => <Rendered text={text} toggleRendered={() => {}} />;
 
 export default NoFile;
