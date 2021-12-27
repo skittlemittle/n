@@ -6,13 +6,6 @@ import BufferPanel from "./styles/BufferPanel";
 import CursorLayer from "./CursorLayer";
 import TextScroller from "./TextScroller";
 
-/** Cope💅 */
-const editorSettings = {
-  fontSize: 16,
-  fontWidth: 9.62,
-  lineHeight: 19,
-};
-
 function status(mode: Mode, left: string[], right: string[]) {
   let m: StatusMode = "normal";
   let m_name: string = m;
@@ -73,22 +66,11 @@ class Buffer extends React.Component<BufferProps, {}> {
               } else {
                 shoveCursor = false;
               }
-              return (
-                <div key={i} style={{ height: editorSettings.lineHeight }}>
-                  {line}
-                </div>
-              );
+              return <div key={i}>{line}</div>;
             })}
 
             <CursorLayer
-              position={{
-                row: row * editorSettings.lineHeight,
-                column: column * editorSettings.fontWidth,
-              }}
-              size={{
-                height: editorSettings.lineHeight,
-                width: editorSettings.fontWidth,
-              }}
+              position={{ row, column }}
               parent={"buffer-panel-0"}
               block={this.props.mode !== Mode.Insert}
               forwardedRef={this.cursorRef}

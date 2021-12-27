@@ -10,13 +10,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 #root {
   height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+#font-tester {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  white-space: pre;
 }
