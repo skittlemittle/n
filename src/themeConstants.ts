@@ -1,13 +1,19 @@
 /** le gruvbox light */
 export const COLORS_L = {
   red: "#9d0006",
+  red_l: "#cc241d",
   orange: "#af3a03",
   orange_l: "#d65d0e",
   yellow: "#b57614",
+  yellow_l: "#d79921",
   green: "#79740e",
+  green_l: "#98971a",
   blue: "#076678",
+  blue_l: "#458588",
   purple: "#8f3f71",
+  purple_l: "#b16286",
   aqua: "#427b58",
+  aqua_l: "#689d6a",
   fg1: "#3c3836",
   fg2: "#504945",
   fg4: "#7c6f64",
@@ -17,6 +23,7 @@ export const COLORS_L = {
   bg3: "#bdae93",
   bg4: "#a89984",
   bg0_h: "#f9f5d7",
+  bg_select: "#dccfad",
 };
 
 export const COLORS_D = {};

@@ -59,7 +59,7 @@ const SidePanel = ({ requestFileLoad }: panelProps) => {
         currentPanel === Panels.FileTree && (
           <FileTree
             requestFileLoad={requestFileLoad}
-            rootDirectory={"smiling_man_dimension"}
+            initRootDirectory={"smiling_man_dimension"}
           />
         )
       }

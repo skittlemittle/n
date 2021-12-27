@@ -3,10 +3,12 @@ import { useEffect, useState, useContext } from "react";
 import { ThemeContext } from "styled-components";
 import { v4 as uuid } from "uuid";
 
-import { loadFolder } from "../fileOperations";
+import { loadFolder, newFile, newFolder } from "../fileOperations";
 import ToolPanel, { TextBox } from "./styles/ToolPanel";
-import arrow from "../assets/icons/arrow.svg";
 import IconButton from "./IconButton";
+import ActionsRibbon from "./FileActions";
+
+import arrow from "../assets/icons/arrow.svg";
 
 /** file / folder entry type */
 interface PathEntry {
@@ -102,11 +104,12 @@ const RenderTree = ({
 
 interface FTreeProps {
   requestFileLoad: requestFileLoad;
-  rootDirectory: string;
+  initRootDirectory: string;
 }
 
-const FileTree = ({ requestFileLoad, rootDirectory }: FTreeProps) => {
+const FileTree = ({ requestFileLoad, initRootDirectory }: FTreeProps) => {
   const [dirTree, setDirTree] = useState<PathEntry[]>([]);
+  const [rootDirectory, changeRootDirectory] = useState(initRootDirectory);
   const rootId = "";
 
   useEffect(() => {
@@ -147,8 +150,35 @@ const FileTree = ({ requestFileLoad, rootDirectory }: FTreeProps) => {
     requestFileLoad(path);
   };
 
+  /** @param path: relative path to the file from the current rootDirectory */
+  const requestNewFile = (path: string) => {
+    const p = `${rootDirectory}/${path}`;
+    newFile(p)
+      .then(() => {
+        requestFileLoad(p);
+      })
+      .catch((e) => console.warn(`FileError:   ${e}`));
+  };
+
+  /** @param path: relative path to the folder from the current rootDirectory */
+  const requestNewFolder = (path: string) => {
+    newFolder(`${rootDirectory}/${path}`).catch((e) =>
+      console.warn(`FileError:   ${e}`)
+    );
+  };
+
+  /** @param path: path to the folder to open */
+  const openFolder = (path: string) => {
+    changeRootDirectory(path);
+  };
+
   return (
     <ToolPanel>
+      <ActionsRibbon
+        newFile={requestNewFile}
+        newFolder={requestNewFolder}
+        open={openFolder}
+      />
       <RenderTree
         dirTree={dirTree}
         foldDir={foldDir}

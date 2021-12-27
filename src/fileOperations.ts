@@ -2,6 +2,7 @@
 
 import {
   BaseDirectory,
+  createDir,
   readDir,
   readTextFile,
   renameFile,
@@ -41,6 +42,11 @@ async function newFile(path: string) {
   return saveFile(path, "");
 }
 
+/** @param path: path to the folder */
+async function newFolder(path: string) {
+  return createDir(path, Foptions);
+}
+
 /**
  * @param path: current path to the file
  * @param newPath: new path of the file
@@ -49,4 +55,4 @@ async function rename(path: string, newPath: string) {
   return renameFile(path, newPath);
 }
 
-export { loadFolder, loadFile, saveFile, newFile, rename };
+export { loadFolder, loadFile, saveFile, newFile, newFolder, rename };
