@@ -49,7 +49,7 @@ const Rendered = (props: Props) => {
       EventCategory.Mode,
       (e: KeyboardEvent, keys: string) => {
         switch (keys) {
-          case "Control,q":
+          case "Control,Shift,M":
             props.toggleRendered(false);
             break;
           default:

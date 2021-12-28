@@ -9,7 +9,7 @@ interface CursorProps {
   position: { row: number; column: number };
   block: boolean;
   /** id of parent buffer */
-  parent: string;
+  parent: React.RefObject<HTMLDivElement>;
   forwardedRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -46,12 +46,10 @@ class CursorLayer extends React.Component<CursorProps, CursorState> {
   }
 
   render() {
-    const offsets = document
-      .getElementById(this.props.parent)
-      ?.getBoundingClientRect();
     let top = 0;
     let left = 0;
-    if (offsets) {
+    if (this.props.parent.current) {
+      const offsets = this.props.parent.current.getBoundingClientRect();
       top = offsets.top;
       left = offsets.left;
     }

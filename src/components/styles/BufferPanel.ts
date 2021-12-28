@@ -6,6 +6,7 @@ const BufferPanel = styled.div`
 
   margin: 0px;
   flex: 1 1 auto;
+  height: 100%;
 
   font-family: "JetBrains Mono", monospace;
   font-style: normal;

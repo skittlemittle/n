@@ -40,6 +40,7 @@ interface BufferProps {
   point: number;
   onPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
   mode: Mode;
+  bufferRef: React.RefObject<HTMLDivElement>;
 }
 
 class Buffer extends React.Component<BufferProps, {}> {
@@ -58,7 +59,7 @@ class Buffer extends React.Component<BufferProps, {}> {
     return (
       <>
         <TextScroller target={this.cursorRef}>
-          <BufferPanel id={"buffer-panel-0"} onPaste={this.props.onPaste}>
+          <BufferPanel onPaste={this.props.onPaste} ref={this.props.bufferRef}>
             {this.props.text.split("\n").map((line, i) => {
               if (shoveCursor && column - line.length > 0) {
                 column -= line.length + 1;
@@ -66,12 +67,16 @@ class Buffer extends React.Component<BufferProps, {}> {
               } else {
                 shoveCursor = false;
               }
-              return <div key={i}>{line}</div>;
+              return (
+                <div key={i} style={{ height: 19 }}>
+                  {line}
+                </div>
+              );
             })}
 
             <CursorLayer
               position={{ row, column }}
-              parent={"buffer-panel-0"}
+              parent={this.props.bufferRef}
               block={this.props.mode !== Mode.Insert}
               forwardedRef={this.cursorRef}
             />

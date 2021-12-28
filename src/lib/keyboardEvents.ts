@@ -21,7 +21,7 @@ const modeKeys = [
   "Escape",
   "CapsLock",
   "Shift,V",
-  "Control,q",
+  "Control,Shift,M",
   "Control,v",
 ];
 /**

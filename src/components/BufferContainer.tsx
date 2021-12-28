@@ -58,6 +58,7 @@ class BufferContainer extends React.Component<Props, State> {
   private visMarks: VisualMarks;
   private commandRepeat: string;
   private commandBuffer: CommandBuffer;
+  private bufferRef;
 
   constructor(props: Props) {
     super(props);
@@ -72,6 +73,7 @@ class BufferContainer extends React.Component<Props, State> {
     };
     this.commandRepeat = "";
     this.commandBuffer = makeCommand();
+    this.bufferRef = React.createRef<HTMLDivElement>();
 
     this.state = {
       text: this.bufferGap.getContents(),
@@ -81,15 +83,15 @@ class BufferContainer extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.KeventIDs.push(
-        KeyboardEvents.addListener(
-          EventCategory.Buffer,
-          this.handleSingleKeyPress
-        ),
-        KeyboardEvents.addListener(EventCategory.Mode, this.handleKeyCombo)
-      );
-    }, 300);
+    this.attachKeyEvents();
+    document.addEventListener("click", (e) => {
+      //@ts-ignore
+      if (this.bufferRef.current && this.bufferRef.current.contains(e.target)) {
+        this.attachKeyEvents();
+      } else {
+        this.detachKeyEvents();
+      }
+    });
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -98,7 +100,7 @@ class BufferContainer extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this.props.save(this.state.point, true); // crude autosave
-    this.KeventIDs.forEach((k) => KeyboardEvents.removeListener(k));
+    this.detachKeyEvents();
   }
 
   /** initialise stuff on mode changes */
@@ -193,8 +195,9 @@ class BufferContainer extends React.Component<Props, State> {
 
   private handleKeyCombo = (e: KeyboardEvent, keys: string) => {
     let renderBuffer = false;
+    let preventCringe = true;
     switch (keys) {
-      case "Control,q":
+      case "Control,Shift,M":
         renderBuffer = true;
         break;
       case "Shift,V":
@@ -204,6 +207,7 @@ class BufferContainer extends React.Component<Props, State> {
       case "Control,v":
         if (this.state.mode === Mode.Normal)
           this.setState({ mode: Mode.Visual_Block });
+        preventCringe = false;
         break;
       default:
         break;
@@ -212,6 +216,10 @@ class BufferContainer extends React.Component<Props, State> {
       this.props.toggleRendered(true);
     }
     this.commandRepeat = "";
+    if (preventCringe) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
 
   private insert(e: KeyboardEvent, keys?: string) {
@@ -295,6 +303,7 @@ class BufferContainer extends React.Component<Props, State> {
         text={this.state.text}
         point={this.state.point}
         mode={this.state.mode}
+        bufferRef={this.bufferRef}
       />
     );
   }
@@ -494,6 +503,27 @@ class BufferContainer extends React.Component<Props, State> {
     this.setState({
       point: this.state.point - this.distanceToNewLine(this.state.point, false),
     });
+  };
+
+  private attachKeyEvents = () => {
+    setTimeout(() => {
+      if (this.KeventIDs.length === 0) {
+        this.KeventIDs.push(
+          KeyboardEvents.addListener(
+            EventCategory.Buffer,
+            this.handleSingleKeyPress
+          ),
+          KeyboardEvents.addListener(EventCategory.Mode, this.handleKeyCombo)
+        );
+      }
+    }, 300);
+  };
+
+  private detachKeyEvents = () => {
+    if (this.KeventIDs.length) {
+      this.KeventIDs.forEach((k) => KeyboardEvents.removeListener(k));
+      this.KeventIDs.length = 0;
+    }
   };
 }
 
