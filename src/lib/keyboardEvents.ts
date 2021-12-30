@@ -54,8 +54,10 @@ class KeyboardEvents {
 
   /** send currently pressed keys / key combos to the relevant subscribers */
   private onKeyDown(e: KeyboardEvent) {
-    if (["Shift, Control"].includes(e.key)) this.pressed.unshift(e.key);
-    else this.pressed.push(e.key);
+    if (!this.pressed.includes(e.key)) {
+      if (["Shift, Control"].includes(e.key)) this.pressed.unshift(e.key);
+      else this.pressed.push(e.key);
+    }
 
     if (modeKeys.includes(this.pressed.toString())) {
       this.call(EventCategory.Mode, e);
@@ -68,7 +70,9 @@ class KeyboardEvents {
   }
 
   private onKeyUp(e: KeyboardEvent) {
-    this.pressed = this.pressed.filter((k) => k !== e.key);
+    this.pressed = this.pressed.filter(
+      (k) => k.toLowerCase() !== e.key.toLowerCase()
+    );
   }
 
   /**
