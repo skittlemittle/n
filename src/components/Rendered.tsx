@@ -50,6 +50,8 @@ const Rendered = (props: Props) => {
       (e: KeyboardEvent, keys: string) => {
         switch (keys) {
           case "Control,Shift,M":
+            e.preventDefault();
+            e.stopImmediatePropagation();
             props.toggleRendered(false);
             break;
           default:

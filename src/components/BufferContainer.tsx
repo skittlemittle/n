@@ -85,11 +85,10 @@ class BufferContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.attachKeyEvents();
     document.addEventListener("click", (e) => {
-      //@ts-ignore
-      if (this.bufferRef.current && this.bufferRef.current.contains(e.target)) {
-        this.attachKeyEvents();
-      } else {
-        this.detachKeyEvents();
+      if (this.bufferRef.current && e.target) {
+        //@ts-ignore
+        if (this.bufferRef.current.contains(e.target)) this.attachKeyEvents();
+        else this.detachKeyEvents();
       }
     });
   }
@@ -218,7 +217,7 @@ class BufferContainer extends React.Component<Props, State> {
     this.commandRepeat = "";
     if (preventCringe) {
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
     }
   };
 
