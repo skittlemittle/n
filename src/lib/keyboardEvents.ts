@@ -80,6 +80,7 @@ class KeyboardEvents {
    * @returns the id of your listener, used to remove the listener
    */
   addListener(category: EventCategory, callback: handler): number {
+    this.pressed = [];
     this.listeners.set(this.ID, callback);
     const ids = this.listenerIds.get(category);
     if (ids !== undefined) {
