@@ -4,7 +4,7 @@ const RenderedPanel = styled.div`
   background: ${(props) => props.theme.colors.bg0};
   color: ${(props) => props.theme.colors.fg1};
 
-  padding: 3em 2em;
+  padding: 1em 2em;
   margin: 0px;
   flex: 1 1 auto;
   overflow-y: auto;
@@ -80,6 +80,42 @@ const RenderedPanel = styled.div`
     border: none;
     border-radius: 3px;
     background-color: ${(props) => props.theme.colors.bg2};
+  }
+
+  del {
+    text-decoration: line-through;
+    color: ${(props) => props.theme.colors.fg3};
+  }
+
+  input[type="checkbox" i] {
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid ${(props) => props.theme.colors.orange};
+    width: 1em;
+    height: 1em;
+    position: relative;
+    top: 3px;
+    margin: 3px;
+
+    &:checked {
+      background-color: ${(props) => props.theme.colors.orange_l};
+      box-shadow: inset 0 0 0 2px ${(props) => props.theme.colors.bg1};
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    color: ${(props) => props.theme.colors.blue_l};
+  }
+
+  blockquote {
+    background: ${(props) => props.theme.colors.bg3 + "46"};
+    border-radius: 2px;
+    padding: 1px 1em;
+    border-left: 4px solid ${(props) => props.theme.colors.purple_l};
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
   }
 `;
 

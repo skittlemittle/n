@@ -16,6 +16,7 @@ export const COLORS_L = {
   aqua_l: "#689d6a",
   fg1: "#3c3836",
   fg2: "#504945",
+  fg3: "#665c54",
   fg4: "#7c6f64",
   bg0: "#fbf1c7",
   bg1: "#ebdbb2",
