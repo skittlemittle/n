@@ -1,15 +1,14 @@
 # unnamed
 
-(the following is not yet true)
+The most based document editor, write in MD, use latex for maffs.
 
-The most based document editor, write in MD, use latex for maffs, and ummmm draw if you want.
+![rendered](https://raw.githubusercontent.com/skittlemittle/n/main/screenshots/rendered.png)
+![maffs](https://raw.githubusercontent.com/skittlemittle/n/main/screenshots/maffs.png)
 
 **Goals**
 
-- ~~render markdown~~
-
-- _everything_ (besides the drawings) is text
-
-- vim inspired keybinds (wip)
-
-- ~~render latex~~
+- [x] render markdown
+- [x] render latex
+- [x] be a desktop app
+- [ ] vim inspired keybinds (wip)
+- [ ] be a nice webapp
